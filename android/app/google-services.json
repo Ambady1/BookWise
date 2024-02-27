@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573414405818",
+    "project_id": "bookwise-14f7f",
+    "storage_bucket": "bookwise-14f7f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573414405818:android:2c8f91355ca489da4e3483",
+        "android_client_info": {
+          "package_name": "com.example.bookwise"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7_-0Gls3ro0DR1kys-uAyAvzfBCcumdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
