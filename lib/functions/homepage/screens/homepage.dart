@@ -51,14 +51,9 @@ class _HomePageState extends State<HomePage> {
                 final books = snapshot.data!.docs;
                 List<String> bookTitles = [];
                 for (var book in books) {
-                  bookTitles.add(book['Title'].toString());
+                  bookTitles.add(book['Title'].toString()); // Cast to string explicitly
                 }
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: _buildBookRows(bookTitles),
-                  ),
-                );
+                return _buildBookRow(bookTitles);
               },
             ),
           ],
@@ -89,53 +84,62 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> _buildBookRows(List<String> bookTitles) {
-    List<Widget> rows = [];
-    for (var i = 0; i < bookTitles.length; i += 5) {
-      List<String> currentRow = bookTitles.sublist(
-          i, i + 5 > bookTitles.length ? bookTitles.length : i + 5);
-      rows.add(_buildBookRow(currentRow));
-    }
-    return rows;
-  }
-
   Widget _buildBookRow(List<String> bookTitles) {
-    return ListView(
-      scrollDirection: Axis.horizontal,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (var bookTitle in bookTitles)
-          FutureBuilder<dynamic>(
-            future: fetchBookData(bookTitle),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox(
-                  width: 150,
-                  height: 300,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                var imageUrl = snapshot.data!['coverUrl'];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    width: 150,
-                    height: 300,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              }
-            },
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Books',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (var bookTitle in bookTitles)
+                FutureBuilder<dynamic>(
+                  future: fetchBookData(bookTitle),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        width: 150,
+                        height: 300,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      var imageUrl = snapshot.data!['coverUrl'];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: 150,
+                          height: 300,
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+            ],
+          ),
+        ),
       ],
     );
   }
+
 
 
   Future<dynamic> fetchBookData(String bookTitle) async {
