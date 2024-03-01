@@ -1,4 +1,4 @@
-import 'package:bookwise/functions/homepage/screens/homepage.dart';
+import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomePage(),
+      home: SignUp(),
     );
   }
 }
