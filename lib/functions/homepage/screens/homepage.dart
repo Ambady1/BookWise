@@ -1,3 +1,4 @@
+import 'package:bookwise/functions/Profile/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+
+  void _onItemTapped(int index) {
+    // Handle navigation to different screens based on index
+    setState(() {
+      _currentIndex = index;
+    });
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyProfile()),
+      );
+    }
+  }
 
   // void exportData() async {
   //   final CollectionReference library =
@@ -43,7 +57,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             // ElevatedButton(onPressed:() => exportData(), child: Text('store csv')),
             StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('library1').snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection('library1').snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
@@ -51,7 +66,8 @@ class _HomePageState extends State<HomePage> {
                 final books = snapshot.data!.docs;
                 List<String> bookTitles = [];
                 for (var book in books) {
-                  bookTitles.add(book['Title'].toString()); // Cast to string explicitly
+                  bookTitles.add(
+                      book['Title'].toString()); // Cast to string explicitly
                 }
                 return _buildBookRow(bookTitles);
               },
@@ -69,6 +85,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _currentIndex = index;
           });
+          _onItemTapped(index);
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -139,8 +156,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
-
 
   Future<dynamic> fetchBookData(String bookTitle) async {
     var url = 'http://openlibrary.org/search.json?title=$bookTitle';
