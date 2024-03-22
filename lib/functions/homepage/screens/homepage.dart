@@ -1,10 +1,12 @@
-import 'package:bookwise/functions/Profile/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:csv/csv.dart';
-//import 'package:flutter/services.dart' show rootBundle;
+
+// Define bookTitles as a global variable
+List<String> bookTitles = [];
+
+void main() => runApp(const MaterialApp(home: HomePage()));
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,46 +18,34 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
-  void _onItemTapped(int index) {
-    // Handle navigation to different screens based on index
-    setState(() {
-      _currentIndex = index;
-    });
-    if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyProfile()),
-      );
-    }
-  }
-
-  // void exportData() async {
-  //   final CollectionReference library =
-  //       FirebaseFirestore.instance.collection("library1");
-  //   final myData = await rootBundle.loadString('assets/booksdata/books.csv');
-  //   List<List<dynamic>> csvTable = CsvToListConverter().convert(myData);
-  //   List<List<dynamic>> data = [];
-  //   data = csvTable;
-  //   for (var i = 0; i < data.length; i++) {
-  //     var record = {
-  //       "Title": data[i][0].toString(), // Cast to string explicitly
-  //       "Author": data[i][1].toString(), // Cast to string explicitly
-  //       "Genre": data[i][2].toString() // Cast to string explicitly
-  //     };
-  //     library.add(record);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HomePage'),
+        backgroundColor: Colors.grey.withOpacity(0.5),
+        leading: SizedBox(
+          width: 48,
+          height: 48,
+          child: IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: DataSearch());
+            },
+          ),
+        ),
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search here',
+            border: InputBorder.none,
+          ),
+          onTap: () {
+            showSearch(context: context, delegate: DataSearch());
+          },
+        ),
       ),
       body: SafeArea(
         child: ListView(
           children: [
-            // ElevatedButton(onPressed:() => exportData(), child: Text('store csv')),
             StreamBuilder<QuerySnapshot>(
               stream:
                   FirebaseFirestore.instance.collection('library1').snapshots(),
@@ -64,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                   return CircularProgressIndicator();
                 }
                 final books = snapshot.data!.docs;
-                List<String> bookTitles = [];
+                bookTitles.clear(); // Clear the list before adding new titles
                 for (var book in books) {
                   bookTitles.add(
                       book['Title'].toString()); // Cast to string explicitly
@@ -78,14 +68,13 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        unselectedItemColor: const Color.fromARGB(255, 203, 125, 120),
+        unselectedItemColor: Color.fromARGB(255, 203, 125, 120),
         selectedItemColor: Color.fromARGB(255, 84, 10, 5),
         backgroundColor: Colors.black,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
-          _onItemTapped(index);
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -110,7 +99,7 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             'Books',
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -125,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                   future: fetchBookData(bookTitle),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return SizedBox(
+                      return const SizedBox(
                         width: 150,
                         height: 300,
                         child: Center(
@@ -138,13 +127,25 @@ class _HomePageState extends State<HomePage> {
                       var imageUrl = snapshot.data!['coverUrl'];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          width: 150,
-                          height: 300,
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                          ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              height: 300,
+                              child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              bookTitle,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -172,5 +173,83 @@ class _HomePageState extends State<HomePage> {
     }
     // Return a default cover URL if no data is found
     return {'coverUrl': 'https://via.placeholder.com/150'};
+  }
+}
+
+// SEARCH FEATURE
+class DataSearch extends SearchDelegate<String> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: Icon(Icons.clear),
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, '');
+      },
+      icon: Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // Filter the bookTitles list to find matches
+    final List<String> matchingBooks = bookTitles.where((title) {
+      return title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    // Display the search results
+    return ListView.builder(
+      itemCount: matchingBooks.length,
+      itemBuilder: (context, index) {
+        final String bookTitle = matchingBooks[index];
+        return ListTile(
+          title: Text(bookTitle),
+          onTap: () {
+            // You can implement what to do when a search result is tapped
+            // For example, you can close the search and navigate to a detailed view of the selected book
+            close(context, bookTitle);
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // Check if the query is empty or null
+    if (query.isEmpty) {
+      return Container(); // Return an empty container if query is empty
+    }
+
+    // Filter the bookTitles list to find suggestions based on the query
+    final List<String> suggestions = bookTitles.where((title) {
+      return title.toLowerCase().startsWith(query.toLowerCase());
+    }).toList();
+
+    // Display the suggestions
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final String suggestion = suggestions[index];
+        return ListTile(
+          title: Text(suggestion),
+          onTap: () {
+            // You can implement what to do when a suggestion is tapped
+            // For example, you can update the search query with the selected suggestion
+            query = suggestion;
+          },
+        );
+      },
+    );
   }
 }
