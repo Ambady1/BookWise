@@ -1,3 +1,5 @@
+import 'package:bookwise/functions/homepage/screens/homepage.dart';
+import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
 import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomePage(),
+      home: LoginPage(),
     );
   }
 }
