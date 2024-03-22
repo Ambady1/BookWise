@@ -1,38 +1,73 @@
+import 'package:bookwise/functions/loginandsignup/screens/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyProfile extends StatelessWidget {
-  const MyProfile({Key?key}) : super(key: key);
+  const MyProfile({Key? key}) : super(key: key);
+
+  Future<void> _logout(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                const LoginPage()), // Navigate to the login screen after logout
+      );
+    } catch (e) {
+      print('Error logging out: $e');
+      // Handle error if needed
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userName = user?.displayName ?? user?.displayName ?? user?.email ?? 'Guest';
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(color: Colors.black87),
         ),
-        leading: Icon(Icons.menu, color: Colors.black87),
+        leading: Builder(
+          builder: (context) => PopupMenuButton(
+            icon: Icon(Icons.menu, color: Colors.black87),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: ListTile(
+                  title: Text('Logout'),
+                  leading: Icon(Icons.exit_to_app),
+                  onTap: () {
+                    _logout(context);
+                    // Call logout function here
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
+              const Row(
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('49457.jpg'),
-                    
+                    // backgroundImage: AssetImage('49457.jpg'),
                   )
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,10 +77,10 @@ class MyProfile extends StatelessWidget {
                       children: [
                         Container(
                           child: Text(
-                            'Vaishnav A P',
+                            userName,
                             style: TextStyle(
                                 color: Colors.grey[800],
-                                fontSize: 25,
+                                fontSize: 10,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -54,7 +89,7 @@ class MyProfile extends StatelessWidget {
                             '@vaiz',
                             style: TextStyle(
                                 color: Colors.blueGrey[400],
-                                fontSize: 14,
+                                fontSize: 8,
                                 fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -77,15 +112,15 @@ class MyProfile extends StatelessWidget {
                           )),
                         ),
                         Container(
-                          width: 100,
+                          width: 70,
                           height: 40,
-                          padding: EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: 20),
                           child: TextButton(
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                  side: BorderSide(
+                                  side: const BorderSide(
                                     color: Colors.blue,
                                     width: 1,
                                     style: BorderStyle.solid,
@@ -106,9 +141,10 @@ class MyProfile extends StatelessWidget {
                             onPressed: () {
                               // Add onPressed functionality here
                             },
-                            child: Text(
+                            child: const Text(
                               'Follow',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white,fontSize:8 ),
+                              
                             ),
                           ),
                         ),
@@ -118,7 +154,7 @@ class MyProfile extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: Divider(
                   thickness: 1,
                   color: Colors.blueGrey[200],
@@ -128,19 +164,19 @@ class MyProfile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 30),
+                    padding:const  EdgeInsets.only(top: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          child: Text(
+                          child: const Text(
                             '203',
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child:const  Text(
                             'Followers',
                             style:
                                 TextStyle(fontSize: 15, color: Colors.blueGrey),
@@ -150,19 +186,19 @@ class MyProfile extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          child: Text(
+                          child: const Text(
                             '932',
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child: const Text(
                             'Following',
                             style:
                                 TextStyle(fontSize: 15, color: Colors.blueGrey),
@@ -172,19 +208,19 @@ class MyProfile extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 30),
+                    padding:const  EdgeInsets.only(top: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          child: Text(
+                          child:const  Text(
                             '30',
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                         ),
                         Container(
-                          child: Text(
+                          child:const  Text(
                             'Projects',
                             style:
                                 TextStyle(fontSize: 15, color: Colors.blueGrey),
@@ -196,20 +232,19 @@ class MyProfile extends StatelessWidget {
                 ],
               ),
               Container(
-                padding: EdgeInsets.only(top: 20),
+                padding:const  EdgeInsets.only(top: 20),
                 child: Divider(
                   thickness: 1,
                   color: Colors.blueGrey[200],
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: Divider(
                   thickness: 1,
                   color: Colors.blueGrey[200],
                 ),
               ),
-
             ],
           ),
         ),
