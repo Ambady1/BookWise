@@ -27,14 +27,14 @@ class _HomePageState extends State<HomePage> {
           width: 48,
           height: 48,
           child: IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               showSearch(context: context, delegate: DataSearch());
             },
           ),
         ),
         title: TextField(
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search here',
             border: InputBorder.none,
           ),
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                   FirebaseFirestore.instance.collection('library1').snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 final books = snapshot.data!.docs;
                 bookTitles.clear(); // Clear the list before adding new titles
@@ -68,8 +68,8 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        unselectedItemColor: Color.fromARGB(255, 203, 125, 120),
-        selectedItemColor: Color.fromARGB(255, 84, 10, 5),
+        unselectedItemColor: const Color.fromARGB(255, 203, 125, 120),
+        selectedItemColor: const Color.fromARGB(255, 84, 10, 5),
         backgroundColor: Colors.black,
         onTap: (index) {
           setState(() {
@@ -94,8 +94,8 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text(
             'Books',
             style: TextStyle(
@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 8.0),
                             Text(
                               bookTitle,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
@@ -185,7 +185,7 @@ class DataSearch extends SearchDelegate<String> {
         onPressed: () {
           query = '';
         },
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
       )
     ];
   }
@@ -196,7 +196,7 @@ class DataSearch extends SearchDelegate<String> {
       onPressed: () {
         close(context, '');
       },
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
     );
   }
 

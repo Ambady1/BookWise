@@ -35,12 +35,12 @@ class MyProfile extends StatelessWidget {
         ),
         leading: Builder(
           builder: (context) => PopupMenuButton(
-            icon: Icon(Icons.menu, color: Colors.black87),
+            icon: const Icon(Icons.menu, color: Colors.black87),
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: ListTile(
-                  title: Text('Logout'),
-                  leading: Icon(Icons.exit_to_app),
+                  title: const Text('Logout'),
+                  leading: const Icon(Icons.exit_to_app),
                   onTap: () {
                     _logout(context);
                     // Call logout function here
