@@ -1,3 +1,4 @@
+import 'package:bookwise/functions/Profile/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -74,6 +75,12 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
+            if (_currentIndex == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyProfile()),
+              );
+            }
           });
         },
         items: const [
