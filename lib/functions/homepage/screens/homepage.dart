@@ -1,5 +1,7 @@
 import 'package:bookwise/functions/Profile/screens/profile.dart';
+import 'package:bookwise/functions/community/screens/mainpage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -78,7 +80,13 @@ class _HomePageState extends State<HomePage> {
             if (_currentIndex == 3) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyProfile()),
+                MaterialPageRoute(builder: (context) =>  MyProfile(uid: FirebaseAuth.instance.currentUser!.uid,)),
+              );
+            }
+            else if (_currentIndex == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  const MainPage()),
               );
             }
           });
@@ -101,8 +109,8 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+       const  Padding(
+          padding:  EdgeInsets.all(8.0),
           child: Text(
             'Books',
             style: TextStyle(
