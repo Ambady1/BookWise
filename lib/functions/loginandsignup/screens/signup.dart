@@ -1,7 +1,9 @@
 import 'package:bookwise/common/toast.dart';
+import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,9 +17,9 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   bool isSigningUp = false;
 
@@ -143,10 +145,28 @@ class _SignUpState extends State<SignUp> {
       isSigningUp = false;
     });
     if (user != null) {
+      await addUserDetails(username, email, user.uid);
       showToast(message: "User is successfully created");
-      Navigator.pushReplacementNamed(context, "/home");
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       showToast(message: "Some error happened");
     }
   }
 }
+
+Future<void> addUserDetails(String username, String email, String uid) async {
+  try {
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'username': username,
+      'email': email,
+      'uid': uid,
+      'followers': [],
+      'following': [],
+    });
+  } catch (e) {
+    print('Error adding user details: $e');
+    throw e; // Rethrow the error to handle it where addUserDetails is called
+  }
+}
+
