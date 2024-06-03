@@ -3,7 +3,10 @@ import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart'; // Adjust the import path if necessary
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,7 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   MyProfile(uid: FirebaseAuth.instance.currentUser!.uid);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,8 +22,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home:SignUp(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppNotifier()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(textTheme: textTheme),
+        home: const SplashScreen(),
+      ),
     );
   }
 }

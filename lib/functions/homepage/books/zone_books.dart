@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
+import 'package:provider/provider.dart';
+import 'package:bookwise/functions/homepage/model/books.dart';
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/functions/homepage/screens/detail_screen.dart';
+
+class ZoneBooks extends StatelessWidget {
+  const ZoneBooks({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String errorLink =
+        "https://img.freepik.com/free-vector/funny-error-404-background-design_1167-219.jpg?w=740&t=st=1658904599~exp=1658905199~hmac=131d690585e96267bbc45ca0978a85a2f256c7354ce0f18461cd030c5968011c";
+    return Consumer<AppNotifier>(builder: (context, value, child) {
+      return FutureBuilder(
+          future: value.getBookData(),
+          builder: (context, AsyncSnapshot<List<Books>> snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text("Opps! Try again later!"),
+              );
+            }
+            if (snapshot.hasData) {
+              /* final firstBook = snapshot.data![3];
+              if (firstBook.items?.isNotEmpty ?? false) {
+                print(firstBook.items![0].volumeInfo?.title ??
+                    'No title available');
+              } else {
+                print('No books found in this book object!');
+              }*/
+              return LayoutBuilder(builder: (context, constraints) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailsScreen()));
+                        },
+                        child: Container(
+                          width: constraints.maxWidth * 0.30,
+                          padding: const EdgeInsets.only(
+                              left: 16, bottom: 5, top: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Card(
+                                elevation: 2,
+                                margin: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: Container(
+                                  //height: height * 0.18,
+                                  height: constraints.maxHeight * 0.6,
+                                  width: constraints.maxWidth * 0.25,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image(
+                                      image: NetworkImage(
+                                        "${snapshot.data![index].items![0].volumeInfo?.imageLinks?.thumbnail ?? errorLink}",
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                "${snapshot.data![index].items![0].volumeInfo?.title}",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(
+                                      fontSize: constraints.maxWidth * 0.035,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                              ),
+                              Container(
+                                height: constraints.maxHeight * 0.1,
+                                width: constraints.maxWidth * 0.18,
+                                alignment: Alignment.center,
+                                /* decoration: BoxDecoration(
+                                color: AppColors.black,
+                                borderRadius: BorderRadius.circular(12)),*/
+                                /*child: Text(
+                              "\$${snapshot.data?.items![index].volumeInfo?.pageCount}",
+                              style: TextStyle(
+                                  fontSize: constraints.maxWidth * 0.035,
+                                  color: Colors.white),
+                            ),*/
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              });
+            }
+            return Center(
+                child: CircularProgressIndicator(
+              color: AppColors.black,
+            ));
+          });
+    });
+  }
+}
