@@ -1,4 +1,6 @@
-import 'package:bookwise/functions/splashscreen.dart';
+import 'package:bookwise/functions/Profile/screens/profile.dart';
+import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  MyProfile(uid: FirebaseAuth.instance.currentUser!.uid);
   runApp(const MyApp());
 }
 
