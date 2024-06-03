@@ -19,14 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToNextScreen() async {
     // Add a delay to show the splash screen for a few seconds
-    await Future.delayed(const Duration(seconds: 2)); // Adjust the duration as needed
+    await Future.delayed(
+        const Duration(seconds: 2)); // Adjust the duration as needed
 
     // Check authentication state
     if (FirebaseAuth.instance.currentUser != null) {
       // User is authenticated, navigate to home screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const Homepage()),
       );
     } else {
       // User is not authenticated, navigate to login screen
