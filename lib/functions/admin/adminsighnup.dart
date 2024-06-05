@@ -1,5 +1,5 @@
 import 'package:bookwise/common/toast.dart';
-import 'package:bookwise/functions/admin/adminsighnup.dart';
+import 'package:bookwise/functions/admin/adminhomepage.dart';
 import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/functions/loginandsignup/screens/login.dart';
@@ -7,18 +7,20 @@ import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookwise/functions/admin/adminlogin.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key});
+class AdminSignUp extends StatefulWidget {
+  const AdminSignUp({Key? key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<AdminSignUp> createState() => _AdminSignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _AdminSignUpState extends State<AdminSignUp> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _citynameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -29,6 +31,7 @@ class _SignUpState extends State<SignUp> {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _citynameController.dispose();
     super.dispose();
   }
 
@@ -37,7 +40,7 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("SignUp"),
+        title: const Text("Register"),
       ),
       body: Center(
         child: Padding(
@@ -46,7 +49,7 @@ class _SignUpState extends State<SignUp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Sign Up",
+                "Register",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -54,12 +57,19 @@ class _SignUpState extends State<SignUp> {
               ),
               FormContainerWidget(
                 controller: _usernameController,
-                hintText: "Username",
+                hintText: "library name",
                 isPasswordField: false,
               ),
               const SizedBox(
                 height: 10,
               ),
+              FormContainerWidget(
+                controller: _citynameController,
+                hintText: "City name",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
@@ -78,7 +88,7 @@ class _SignUpState extends State<SignUp> {
               ),
               GestureDetector(
                 onTap: () {
-                  _signUp();
+                  _register();
                 },
                 child: Container(
                   width: double.infinity,
@@ -91,7 +101,7 @@ class _SignUpState extends State<SignUp> {
                     child: isSigningUp
                         ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
-                            "Sign Up",
+                            "Register",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -105,7 +115,7 @@ class _SignUpState extends State<SignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account?"),
+                 const  Text("Already registered?"),
                   const SizedBox(
                     width: 5,
                   ),
@@ -113,7 +123,7 @@ class _SignUpState extends State<SignUp> {
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
                           (route) => false);
                     },
                     child: const Text(
@@ -127,33 +137,7 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(
                 height: 20,
               ),
-          GestureDetector(
-                child: Container(
-                  width:double.infinity,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 47, 51, 55),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Register as a library",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  
-                
-                ),
-                onTap: (){
-                  Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AdminSignUp()),
-                          (route) => false);
-                },
-              )
+             
             ],
           ),
         ),
@@ -161,12 +145,13 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  void _signUp() async {
+  void _register() async {
     setState(() {
       isSigningUp = true;
     });
 
     String username = _usernameController.text;
+    String cityname = _citynameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -176,24 +161,23 @@ class _SignUpState extends State<SignUp> {
       isSigningUp = false;
     });
     if (user != null) {
-      await addUserDetails(username, email, user.uid);
-      showToast(message: "User is successfully created");
+      await addUserDetails(username, email,cityname, user.uid);
+      showToast(message: "Library is successfully registered");
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+          context, MaterialPageRoute(builder: (context) => const AdminHomePage()));
     } else {
       showToast(message: "Some error happened");
     }
   }
 }
 
-Future<void> addUserDetails(String username, String email, String uid) async {
+Future<void> addUserDetails(String username, String email,String cityname, String uid) async {
   try {
-    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+    await FirebaseFirestore.instance.collection('libraries').doc(uid).set({
       'username': username,
       'email': email,
+      'cityname': cityname,
       'uid': uid,
-      'followers': [],
-      'following': [],
     });
   } catch (e) {
     print('Error adding user details: $e');

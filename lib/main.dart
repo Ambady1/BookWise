@@ -1,5 +1,5 @@
 import 'package:bookwise/functions/Profile/screens/profile.dart';
-import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
+import 'package:bookwise/functions/admin/adminsighnup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +10,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  MyProfile(uid: FirebaseAuth.instance.currentUser!.uid);
   runApp(MyApp());
 }
 
@@ -19,8 +18,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    
     return MaterialApp(
-      home:SignUp(),
+      home: currentUser != null ? MyProfile(uid: currentUser.uid) : AdminSignUp(),
     );
   }
 }
