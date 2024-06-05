@@ -38,7 +38,6 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     _loadUserData();
   }
-
   @override
   void didUpdateWidget(covariant MyProfile oldWidget) {
     super.didUpdateWidget(oldWidget);

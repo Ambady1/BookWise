@@ -1,15 +1,15 @@
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/admin/adminsighnup.dart';
-import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/functions/loginandsignup/screens/login.dart';
+import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key});
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -105,7 +105,7 @@ class _SignUpState extends State<SignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account?"),
+                  const Text("Already have an account?"),
                   const SizedBox(
                     width: 5,
                   ),
@@ -113,7 +113,8 @@ class _SignUpState extends State<SignUp> {
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
                           (route) => false);
                     },
                     child: const Text(
@@ -179,7 +180,7 @@ class _SignUpState extends State<SignUp> {
       await addUserDetails(username, email, user.uid);
       showToast(message: "User is successfully created");
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+          context, MaterialPageRoute(builder: (context) => MainScreen()));
     } else {
       showToast(message: "Some error happened");
     }
@@ -200,4 +201,3 @@ Future<void> addUserDetails(String username, String email, String uid) async {
     throw e; // Rethrow the error to handle it where addUserDetails is called
   }
 }
-
