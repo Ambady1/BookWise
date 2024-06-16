@@ -36,7 +36,8 @@ class AnimeBooks extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailsScreen()));
+                              builder: (context) => DetailsScreen(
+                                  id: snapshot.data?.items?[index].id)));
                     },
                     child: Container(
                       width: constraints.maxWidth * 0.30,

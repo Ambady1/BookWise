@@ -41,7 +41,8 @@ class ZoneBooks extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DetailsScreen()));
+                                  builder: (context) => DetailsScreen(
+                                      id: snapshot.data?[index].items?[0].id)));
                         },
                         child: Container(
                           width: constraints.maxWidth * 0.30,
