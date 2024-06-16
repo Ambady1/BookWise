@@ -57,7 +57,9 @@ class CustomSearchDelegate extends SearchDelegate {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DetailsScreen()));
+                              builder: (context) => DetailsScreen(
+                                  id: snapshot.data?.items?[index].id,
+                                  boxColor: AppColors.lightBlue)));
                     },
                     leading: Image.network(
                         "${snapshot.data?.items?[index].volumeInfo?.imageLinks?.thumbnail ?? errorLink}"),
@@ -106,7 +108,9 @@ class CustomSearchDelegate extends SearchDelegate {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailsScreen()));
+                                builder: (context) => DetailsScreen(
+                                    id: snapshot.data?.items?[index].id,
+                                    boxColor: AppColors.lightBlue)));
                       },
                       leading: Image.network(
                           "${snapshot.data?.items?[index].volumeInfo?.imageLinks?.thumbnail ?? errorLink}"),
