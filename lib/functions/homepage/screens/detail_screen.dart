@@ -19,10 +19,13 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    String errorLink =
+        "https://img.freepik.com/free-vector/funny-error-404-background-design_1167-219.jpg?w=740&t=st=1658904599~exp=1658905199~hmac=131d690585e96267bbc45ca0978a85a2f256c7354ce0f18461cd030c5968011c";
     double height = MediaQuery.of(context).size.height / 815;
     double width = MediaQuery.of(context).size.width / 375;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 46, 42, 42),
       body: Consumer<AppNotifier>(
         builder: ((context, value, child) {
           return widget.id != null
@@ -65,7 +68,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         borderRadius: BorderRadius.circular(12),
                                         child: Image(
                                           image: NetworkImage(
-                                              "${snapshot.data?.volumeInfo?.imageLinks?.thumbnail}"),
+                                              "${snapshot.data?.volumeInfo?.imageLinks?.thumbnail ?? errorLink}"),
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -103,16 +106,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayLarge
-                                        ?.copyWith(fontSize: 24),
+                                        ?.copyWith(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                        ),
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    "${snapshot.data?.volumeInfo!.authors?.length != 0 ? snapshot.data?.volumeInfo!.authors![0] : "Censored"}"
+                                    "${(snapshot.data?.volumeInfo!.authors?.isNotEmpty ?? false) ? snapshot.data?.volumeInfo!.authors![0] : "Censored"}"
                                         .toUpperCase(),
                                     textAlign: TextAlign.center,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headlineMedium,
+                                        .headlineMedium
+                                        ?.copyWith(color: Colors.white),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -130,7 +137,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           "${snapshot.data?.volumeInfo?.printType}",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .headlineMedium
+                                              ?.copyWith(color: Colors.white),
                                         ),
                                         const Spacer(
                                           flex: 2,
@@ -140,13 +148,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           width: width * 90,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                              color: AppColors.black,
+                                              color: Colors.white,
                                               borderRadius:
                                                   BorderRadius.circular(12)),
                                           child: const Text(
                                             "AVAILABLE",
                                             style:
-                                                TextStyle(color: Colors.white),
+                                                TextStyle(color: Colors.black),
                                           ),
                                         ),
                                         const Spacer(),
@@ -154,7 +162,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           "${snapshot.data?.volumeInfo?.pageCount} Pages",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .headlineMedium
+                                              ?.copyWith(color: Colors.white),
                                         )
                                       ],
                                     ),
@@ -180,27 +189,31 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           }
                                         },
                                         style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(width: 1)),
+                                            side: const BorderSide(
+                                                width: 1, color: Colors.white)),
                                         child: Text(
                                           "BOOK THIS",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .headlineMedium
+                                              ?.copyWith(color: Colors.white),
                                         ),
                                       ),
                                       OutlinedButton.icon(
                                         onPressed: () {},
                                         style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(width: 1)),
-                                        icon: Icon(
+                                            side: const BorderSide(
+                                                width: 1, color: Colors.white)),
+                                        icon: const Icon(
                                           Icons.favorite_outline,
-                                          color: AppColors.black,
+                                          color: Colors.white,
                                         ),
                                         label: Text(
                                           "WISHLIST",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .headlineMedium
+                                              ?.copyWith(color: Colors.white),
                                         ),
                                       )
                                     ],
@@ -212,7 +225,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     "Details",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .displayMedium,
+                                        .displayMedium
+                                        ?.copyWith(color: Colors.white),
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -230,20 +244,28 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                               "Author",
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headlineMedium,
+                                                  .headlineMedium
+                                                  ?.copyWith(
+                                                      color: Colors.white),
                                             ),
                                             Text("Publisher",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium),
+                                                    .headlineMedium
+                                                    ?.copyWith(
+                                                        color: Colors.white)),
                                             Text("Published Date",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium),
+                                                    .headlineMedium
+                                                    ?.copyWith(
+                                                        color: Colors.white)),
                                             Text("Category",
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headlineMedium)
+                                                    .headlineMedium
+                                                    ?.copyWith(
+                                                        color: Colors.white))
                                           ],
                                         ),
                                         const SizedBox(width: 20),
@@ -253,33 +275,41 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "${snapshot.data?.volumeInfo?.authors?[0]}",
+                                                "${(snapshot.data?.volumeInfo?.authors?.isNotEmpty ?? false) ? snapshot.data?.volumeInfo?.authors![0] : 'Unknown'}",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall
-                                                    ?.copyWith(fontSize: 16),
+                                                    ?.copyWith(
+                                                        fontSize: 16,
+                                                        color: Colors.white),
                                               ),
                                               Text(
-                                                "${snapshot.data?.volumeInfo?.publisher}",
+                                                "${snapshot.data?.volumeInfo?.publisher ?? 'Unknown'}",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall
-                                                    ?.copyWith(fontSize: 16),
+                                                    ?.copyWith(
+                                                        fontSize: 16,
+                                                        color: Colors.white),
                                               ),
                                               Text(
-                                                "${snapshot.data?.volumeInfo?.publishedDate}",
+                                                "${snapshot.data?.volumeInfo?.publishedDate ?? 'Unknown'}",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall
-                                                    ?.copyWith(fontSize: 16),
+                                                    ?.copyWith(
+                                                        fontSize: 16,
+                                                        color: Colors.white),
                                               ),
                                               Text(
-                                                "${snapshot.data?.volumeInfo?.categories?[0]}",
+                                                "${(snapshot.data?.volumeInfo?.categories?.isNotEmpty ?? false) ? snapshot.data?.volumeInfo?.categories![0] : 'Unknown'}",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headlineSmall
-                                                    ?.copyWith(fontSize: 16),
+                                                    ?.copyWith(
+                                                        fontSize: 16,
+                                                        color: Colors.white),
                                               )
                                             ],
                                           ),
@@ -294,23 +324,31 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     "Description",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .displayMedium,
+                                        .displayMedium
+                                        ?.copyWith(color: Colors.white),
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
                                   ReadMoreText(
-                                    // Use stripHtmlIfNeeded or a regular expression
-                                    "${snapshot.data?.volumeInfo?.description?.replaceAll(RegExp(r'<p>|</p>'), '')}",
+                                    "${snapshot.data?.volumeInfo?.description?.replaceAll(RegExp(r'<p>|</p>|<b>|</b>|<br>|<i>|</i>'), '')}",
                                     trimLines: 6,
-                                    colorClickableText: AppColors.black,
+                                    colorClickableText: Colors.blue,
                                     trimMode: TrimMode.Line,
                                     trimCollapsedText: 'Read More',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.copyWith(fontSize: 14),
-                                    trimExpandedText: ' Less',
+                                    trimExpandedText: ' Collapse',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    ),
+                                    moreStyle: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                    lessStyle: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
                                   ),
                                   const SizedBox(height: 10),
                                   ElevatedButton(

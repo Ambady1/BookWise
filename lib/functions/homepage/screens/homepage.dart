@@ -70,10 +70,10 @@ class _HomepageState extends State<Homepage> {
                                 border: Border.all(
                                     width: 1, color: AppColors.black),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Text("Search for Books"),
                                   Icon(Icons.search),
                                 ],
