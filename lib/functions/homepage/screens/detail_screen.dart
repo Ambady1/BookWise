@@ -331,21 +331,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     height: 10,
                                   ),
                                   ReadMoreText(
-                                    "${snapshot.data?.volumeInfo?.description?.replaceAll(RegExp(r'<p>|</p>|<b>|</b>|<br>|<i>|</i>'), '')}",
+                                    "${snapshot.data?.volumeInfo?.description?.replaceAll(RegExp(r'<p>|</p>|<b>|</b>|<br>|<i>|</i>|&quot;'), '')}",
                                     trimLines: 6,
                                     colorClickableText: Colors.blue,
                                     trimMode: TrimMode.Line,
                                     trimCollapsedText: 'Read More',
                                     trimExpandedText: ' Collapse',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.white,
                                     ),
-                                    moreStyle: TextStyle(
+                                    moreStyle: const TextStyle(
                                       color: Colors.blue,
                                       decoration: TextDecoration.underline,
                                     ),
-                                    lessStyle: TextStyle(
+                                    lessStyle: const TextStyle(
                                       color: Colors.blue,
                                       decoration: TextDecoration.underline,
                                     ),
