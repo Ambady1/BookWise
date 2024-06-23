@@ -31,6 +31,7 @@ TextTheme textTheme = TextTheme(
 class AppColors {
   static Color lightBlue = const Color(0xffCFEDEF);
   static Color black = Colors.black87;
+  static Color lightyellow = Color.fromARGB(255, 227, 79, 195);
 }
 
 List<Color> boxColors = const [

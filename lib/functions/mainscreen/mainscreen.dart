@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/screens/homepage.dart';
-import 'package:bookwise/functions/community/screens/mainpage.dart';
+import 'package:bookwise/functions/community/screens/communitymainpage.dart';
 import 'package:bookwise/functions/Profile/screens/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
