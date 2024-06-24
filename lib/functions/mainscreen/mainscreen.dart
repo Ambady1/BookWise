@@ -1,3 +1,4 @@
+import 'package:bookwise/functions/wishlist/screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:bookwise/functions/community/screens/communitymainpage.dart';
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final screens = [
     Homepage(),
     MainPage(),
+    Wishlist(),
     MyProfile(uid: FirebaseAuth.instance.currentUser!.uid),
   ];
   @override
@@ -41,6 +43,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Wishlist',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
