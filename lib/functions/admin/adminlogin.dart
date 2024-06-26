@@ -1,7 +1,7 @@
 
 import 'package:bookwise/common/toast.dart';
-import 'package:bookwise/functions/admin/adminhomepage.dart';
 import 'package:bookwise/functions/admin/adminsighnup.dart';
+import 'package:bookwise/functions/admin/mainpage/adminMainscreen.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,7 +65,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  _AdminsignIn();
+                  _adminsignIn();
                 },
                 child: Container(
                   width: double.infinity,
@@ -124,7 +124,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
-  void _AdminsignIn() async {
+  void _adminsignIn() async {
     setState(() {
       _isSigning = true;
     });
@@ -141,7 +141,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     if (user != null) {
       showToast(message: "Admin is successfully signed in");
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const AdminHomePage()));
+          context, MaterialPageRoute(builder: (context) => const AdminMainScreen()));
     } else {
       showToast(message: "Invalid email or password");
     }

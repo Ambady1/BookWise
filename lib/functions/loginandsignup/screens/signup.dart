@@ -7,6 +7,7 @@ import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bookwise/common/randomname.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -128,12 +129,12 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(
                 height: 20,
               ),
-          GestureDetector(
+              GestureDetector(
                 child: Container(
-                  width:double.infinity,
+                  width: double.infinity,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 47, 51, 55),
+                    color: Color.fromARGB(255, 23, 98, 173),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Center(
@@ -145,14 +146,13 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   ),
-                  
-                
                 ),
-                onTap: (){
+                onTap: () {
                   Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const AdminSignUp()),
-                          (route) => false);
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AdminSignUp()),
+                      (route) => false);
                 },
               )
             ],
@@ -189,10 +189,13 @@ class _SignUpState extends State<SignUp> {
 
 Future<void> addUserDetails(String username, String email, String uid) async {
   try {
+    String nickname =
+        generateUniqueReaderName(); // Call the imported function to generate nickname
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'username': username,
       'email': email,
       'uid': uid,
+      'nickname': nickname, // Store the generated nickname
       'followers': [],
       'following': [],
     });

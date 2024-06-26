@@ -41,7 +41,9 @@ dependencies:
   fluttertoast: ^8.2.4
   file_picker: ^8.0.0+1
   provider: ^6.1.2
-  google_fonts: ^6.2.1
+  google_fonts: 6.1.0
+  firebase_storage: ^11.6.9
+  image_picker: ^1.0.8
   
 dev_dependencies:
   flutter_test:

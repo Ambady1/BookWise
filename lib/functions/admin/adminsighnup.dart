@@ -1,8 +1,6 @@
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/admin/adminhomepage.dart';
-import 'package:bookwise/functions/homepage/screens/homepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
-import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

@@ -1,10 +1,11 @@
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
+import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
-import 'package:bookwise/functions/homepage/screens/homepage.dart';
+import 'package:bookwise/functions/admin/adminlogin.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -116,6 +117,33 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Are you a librarian?"),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                          (route) => false);
+                    },
+                    child: const Text(
+                      "login",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -140,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       showToast(message: "User is successfully signed in");
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Homepage()));
+          context, MaterialPageRoute(builder: (context) => const MainScreen()));
     } else {
       showToast(message: "some error occurred");
     }
