@@ -21,11 +21,12 @@ class _MyProfileState extends State<MyProfile> {
   Future<void> _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LoginPage(),
         ),
+        (Route<dynamic> route) =>
+            false, // This will remove all the previous routes.
       );
     } catch (e) {
       print('Error logging out: $e');
@@ -38,6 +39,7 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     _loadUserData();
   }
+
   @override
   void didUpdateWidget(covariant MyProfile oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -62,10 +64,11 @@ class _MyProfileState extends State<MyProfile> {
         following = snap.data()!['following'].length;
 
         // Update isFollowing state based on fetched followers list
-       isFollowing = snap.data()!['followers'] == null
-          ? false
-          : snap.data()!['followers'].contains(FirebaseAuth.instance.currentUser!.uid);
-
+        isFollowing = snap.data()!['followers'] == null
+            ? false
+            : snap
+                .data()!['followers']
+                .contains(FirebaseAuth.instance.currentUser!.uid);
       }
     } catch (e) {
       print('Error in loading user data: $e');
@@ -97,7 +100,9 @@ class _MyProfileState extends State<MyProfile> {
                         title: Text('Logout'),
                         leading: Icon(Icons.exit_to_app),
                         onTap: () {
-                          _logout(context);
+                          Navigator.of(context)
+                              .pop(); // Close the popup menu first
+                          _logout(context); // Call the logout function
                         },
                       ),
                     ),
@@ -177,40 +182,46 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                     onPressed: () async {
-  if (FirebaseAuth.instance.currentUser!.uid == widget.uid) {
-    setState(() {
-      following = followers; // If viewing own profile, set following count equal to followers count
-    });
-    return;
-  }
+                      onPressed: () async {
+                        if (FirebaseAuth.instance.currentUser!.uid ==
+                            widget.uid) {
+                          setState(() {
+                            following =
+                                followers; // If viewing own profile, set following count equal to followers count
+                          });
+                          return;
+                        }
 
-  setState(() {
-    isFollowing = !isFollowing; // Toggle follow/unfollow status
-    followers += isFollowing ? 1 : -1; // Increment/decrement followers count based on follow/unfollow
-  });
+                        setState(() {
+                          isFollowing =
+                              !isFollowing; // Toggle follow/unfollow status
+                          followers += isFollowing
+                              ? 1
+                              : -1; // Increment/decrement followers count based on follow/unfollow
+                        });
 
-  // Update followers list for the user being followed
-  await FirebaseFirestore.instance
-    .collection('users')
-    .doc(widget.uid)
-    .update({
-      'followers': isFollowing
-          ? FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid])
-          : FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.uid]),
-    });
+                        // Update followers list for the user being followed
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(widget.uid)
+                            .update({
+                          'followers': isFollowing
+                              ? FieldValue.arrayUnion(
+                                  [FirebaseAuth.instance.currentUser!.uid])
+                              : FieldValue.arrayRemove(
+                                  [FirebaseAuth.instance.currentUser!.uid]),
+                        });
 
-  // Update following list for the current user
-  await FirebaseFirestore.instance
-    .collection('users')
-    .doc(FirebaseAuth.instance.currentUser!.uid)
-    .update({
-      'following': isFollowing
-          ? FieldValue.arrayUnion([widget.uid])
-          : FieldValue.arrayRemove([widget.uid]),
-    });
-},
-
+                        // Update following list for the current user
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({
+                          'following': isFollowing
+                              ? FieldValue.arrayUnion([widget.uid])
+                              : FieldValue.arrayRemove([widget.uid]),
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius:

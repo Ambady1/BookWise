@@ -64,10 +64,10 @@ class CustomSearchDelegate extends SearchDelegate {
                     leading: Image.network(
                         "${snapshot.data?.items?[index].volumeInfo?.imageLinks?.thumbnail ?? errorLink}"),
                     title: Text(
-                      "${snapshot.data?.items![index].volumeInfo!.authors?.length != 0 ? snapshot.data?.items![index].volumeInfo!.authors![0] : "Not Found"}",
+                      "${snapshot.data?.items?[index].volumeInfo?.authors?.length != 0 ? snapshot.data?.items![index].volumeInfo!.authors![0] : "Not Found"}",
                     ),
                     subtitle: Text(
-                      "${snapshot.data?.items![index].volumeInfo?.title}",
+                      "${snapshot.data?.items?[index].volumeInfo?.title}",
                     ),
                   );
                 },
@@ -115,10 +115,10 @@ class CustomSearchDelegate extends SearchDelegate {
                       leading: Image.network(
                           "${snapshot.data?.items?[index].volumeInfo?.imageLinks?.thumbnail ?? errorLink}"),
                       title: Text(
-                        "${snapshot.data?.items![index].volumeInfo!.authors?.length != 0 ? snapshot.data?.items![index].volumeInfo!.authors![0] : "Not Found"}",
+                        "${snapshot.data?.items?[index].volumeInfo!.authors?.length != 0 ? snapshot.data?.items![index].volumeInfo!.authors![0] : "Not Found"}",
                       ),
                       subtitle: Text(
-                          "${snapshot.data?.items![index].volumeInfo?.title}"));
+                          "${snapshot.data?.items?[index].volumeInfo?.title}"));
                 },
               );
             }

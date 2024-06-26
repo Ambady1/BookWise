@@ -1,10 +1,10 @@
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
+import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
-import 'package:bookwise/functions/homepage/screens/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -128,21 +128,32 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    try {
+      User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-    setState(() {
-      _isSigning = false;
-    });
+      setState(() {
+        _isSigning = false;
+      });
 
-    if (user != null) {
-      showToast(message: "User is successfully signed in");
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Homepage()));
-    } else {
-      showToast(message: "some error occurred");
+      if (user != null) {
+        showToast(message: "User is successfully signed in");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        showToast(message: "Unknown error occurred, please try again");
+      }
+    } catch (e) {
+      setState(() {
+        _isSigning = false;
+      });
+
+      showToast(message: "Error: ${e.toString()}");
+      print("Error signing in: ${e.toString()}");
     }
   }
 }
