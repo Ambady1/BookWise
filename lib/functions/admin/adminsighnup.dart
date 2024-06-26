@@ -1,29 +1,35 @@
 import 'package:bookwise/common/toast.dart';
+import 'package:bookwise/functions/admin/adminhomepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
-import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookwise/functions/admin/adminlogin.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key});
+class AdminSignUp extends StatefulWidget {
+  const AdminSignUp({Key? key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AdminSignUp> createState() => _AdminSignUpState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool _isSigning = false;
+class _AdminSignUpState extends State<AdminSignUp> {
   final FirebaseAuthService _auth = FirebaseAuthService();
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _citynameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool isSigningUp = false;
+
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _citynameController.dispose();
     super.dispose();
   }
 
@@ -32,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Login"),
+        title: const Text("Register"),
       ),
       body: Center(
         child: Padding(
@@ -41,12 +47,27 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Login",
+                "Register",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 30,
               ),
+              FormContainerWidget(
+                controller: _usernameController,
+                hintText: "library name",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FormContainerWidget(
+                controller: _citynameController,
+                hintText: "City name",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
@@ -65,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  _signIn();
+                  _register();
                 },
                 child: Container(
                   width: double.infinity,
@@ -75,16 +96,13 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: _isSigning
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                    child: isSigningUp
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
-                            "Login",
+                            "Register",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),
@@ -95,24 +113,21 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                 const  Text("Already registered?"),
                   const SizedBox(
                     width: 5,
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SignUp()),
-                        (route) => false,
-                      );
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                          (route) => false);
                     },
                     child: const Text(
-                      "Sign Up",
+                      "Login",
                       style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -120,30 +135,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 20,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Are you a librarian?"),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
-                          (route) => false);
-                    },
-                    child: const Text(
-                      "login",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+             
             ],
           ),
         ),
@@ -151,41 +143,43 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _signIn() async {
+  void _register() async {
     setState(() {
-      _isSigning = true;
+      isSigningUp = true;
     });
 
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+    String username = _usernameController.text;
+    String cityname = _citynameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
 
-    try {
-      User? user = await _auth.signInWithEmailAndPassword(email, password);
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
-      setState(() {
-        _isSigning = false;
-      });
-
-      if (user != null) {
-        showToast(message: "User is successfully signed in");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
-      } else {
-        showToast(message: "Unknown error occurred, please try again");
-      }
-    } catch (e) {
-      setState(() {
-        _isSigning = false;
-      });
-
+    setState(() {
+      isSigningUp = false;
+    });
     if (user != null) {
-      showToast(message: "User is successfully signed in");
+      await addUserDetails(username, email,cityname, user.uid);
+      showToast(message: "Library is successfully registered");
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const MainScreen()));
+          context, MaterialPageRoute(builder: (context) => const AdminHomePage()));
     } else {
-      showToast(message: "some error occurred");
+      showToast(message: "Some error happened");
     }
   }
 }
+
+Future<void> addUserDetails(String username, String email,String cityname, String uid) async {
+  try {
+    await FirebaseFirestore.instance.collection('libraries').doc(uid).set({
+      'username': username,
+      'email': email,
+      'cityname': cityname,
+      'uid': uid,
+    });
+  } catch (e) {
+    print('Error adding user details: $e');
+    throw e; // Rethrow the error to handle it where addUserDetails is called
+  }
+}
+
