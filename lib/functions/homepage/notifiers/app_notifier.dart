@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bookwise/functions/homepage/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/model/books.dart';
+import 'package:bookwise/functions/homepage/model/detailmodel.dart';
 import 'package:bookwise/functions/homepage/repositories/firebasecall.dart';
 
 class AppNotifier extends ChangeNotifier {
@@ -68,11 +69,11 @@ class AppNotifier extends ChangeNotifier {
   }
 
 //Showing Particular Book Details
-  /* Future<DetailModel> showBookData({required String id}) async {
+  Future<DetailModel> showBookData({required String id}) async {
     var res = await bookApi.showBooksDetails(id: id);
     //print(res);
     var data = jsonDecode(res);
 
     return DetailModel.fromJson(data);
-  }*/
+  }
 }
