@@ -2,7 +2,7 @@ import 'package:bookwise/functions/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart'; // Adjust the import path if necessary
+import 'package:bookwise/common/constants/firebase_options.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 

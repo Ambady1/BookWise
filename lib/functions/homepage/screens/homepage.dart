@@ -1,9 +1,7 @@
 import 'package:bookwise/functions/homepage/books/anime_books.dart';
 import 'package:bookwise/functions/homepage/books/zone_books.dart';
 import 'package:flutter/material.dart';
-//import 'package:bookwise/functions/homepage/repositories/firebasecall.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
-//import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 import 'package:bookwise/functions/homepage/books/headline.dart';
 import 'package:bookwise/functions/homepage/books/adventure_books.dart';
 import 'package:bookwise/functions/homepage/books/novel.dart';
@@ -23,7 +21,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 46, 42, 42),
       body: SingleChildScrollView(

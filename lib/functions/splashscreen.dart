@@ -1,3 +1,6 @@
+
+import 'package:bookwise/functions/admin/mainpage/adminMainscreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookwise/functions/loginandsignup/screens/login.dart';
@@ -14,31 +17,38 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen();
+    _navigateToNextScreen(context , FirebaseAuth.instance.currentUser);
   }
 
-  Future<void> _navigateToNextScreen() async {
-    // Add a delay to show the splash screen for a few seconds
-    await Future.delayed(
-        const Duration(seconds: 2)); // Adjust the duration as needed
+  void _navigateToNextScreen(BuildContext context, User? user) async {
+  if (user != null) {
+    // Check if the user is in the 'libraries' collection using the user ID
+    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('libraries')
+        .doc(user.uid)
+        .get();
 
-    // Check authentication state
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // User is authenticated, navigate to home screen
+    if (userDoc.exists) {
+      // User is in the 'libraries' collection, navigate to AdminMainScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminMainScreen()),
+      );
+    } else {
+      // User is not in the 'libraries' collection, navigate to MainScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainScreen()),
       );
-    } else {
-      // User is not authenticated, navigate to login screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
     }
+  } else {
+    // User is not authenticated, navigate to LoginPage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
