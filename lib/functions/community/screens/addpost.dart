@@ -1,18 +1,23 @@
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/community/screens/addpost_type.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddPostScreen extends ConsumerWidget {
-  const AddPostScreen({super.key});
+class AddPostScreen extends StatefulWidget {
+  const AddPostScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _AddPostScreenState createState() => _AddPostScreenState();
+}
+
+class _AddPostScreenState extends State<AddPostScreen> {
+  @override
+  Widget build(BuildContext context) {
     double cardHeight = 150;
     double cardWidth = double.infinity;
     double iconSize = 60;
     Color iconColor = Colors.white30;
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 46, 42, 42),
       body: Stack(
@@ -23,8 +28,7 @@ class AddPostScreen extends ConsumerWidget {
                 Stack(
                   children: [
                     Container(
-                      width: double
-                          .infinity, // Ensure the container takes full width
+                      width: double.infinity,
                       height: height / 5,
                       decoration: BoxDecoration(
                         color: AppColors.lightBlue,

@@ -156,14 +156,29 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    try {
+      User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-    setState(() {
-      _isSigning = false;
-    });
+      setState(() {
+        _isSigning = false;
+      });
+
+      if (user != null) {
+        showToast(message: "User is successfully signed in");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        showToast(message: "Unknown error occurred, please try again");
+      }
+    } catch (e) {
+      setState(() {
+        _isSigning = false;
+      });
 
     if (user != null) {
       showToast(message: "User is successfully signed in");

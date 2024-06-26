@@ -1,7 +1,9 @@
 import 'dart:io';
-import 'package:bookwise/functions/community/core/utils.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/functions/community/core/utils.dart';
+import 'package:bookwise/functions/community/repositories/firestor.dart';
+import 'package:bookwise/functions/community/repositories/storage.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class AddPostType extends StatefulWidget {
@@ -19,6 +21,18 @@ class _AddPostTypeState extends State<AddPostType> {
 
   File? bannerFile;
 
+  bool get isFormValid {
+    if (widget.type == 'Image') {
+      return titleController.text.isNotEmpty && bannerFile != null;
+    } else if (widget.type == 'Text') {
+      return titleController.text.isNotEmpty &&
+          descriptionController.text.isNotEmpty;
+    } else if (widget.type == 'Link') {
+      return titleController.text.isNotEmpty && linkController.text.isNotEmpty;
+    }
+    return false;
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -28,15 +42,16 @@ class _AddPostTypeState extends State<AddPostType> {
   }
 
   void selectBannerImage() async {
+    // Simulated function for picking image
     final res = await pickImage();
 
     if (res != null) {
       setState(() {
         bannerFile = File(res.files.first.path!);
-        print("Banner file selected: ${bannerFile!.path}");
+        showSnackBar(context, 'Image Selected');
       });
     } else {
-      print("No image selected.");
+      showSnackBar(context, 'Error Importing Image!');
     }
   }
 
@@ -46,6 +61,7 @@ class _AddPostTypeState extends State<AddPostType> {
     final isTypeText = widget.type == 'Text';
     final isTypeLink = widget.type == 'Link';
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 46, 42, 42),
       body: Stack(
@@ -66,7 +82,7 @@ class _AddPostTypeState extends State<AddPostType> {
                         ),
                       ),
                       child: SafeArea(
-                        minimum: EdgeInsets.all(16),
+                        minimum: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -98,6 +114,9 @@ class _AddPostTypeState extends State<AddPostType> {
                           contentPadding: EdgeInsets.all(18),
                         ),
                         maxLength: 30,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 10),
                       if (isTypeImage)
@@ -140,16 +159,47 @@ class _AddPostTypeState extends State<AddPostType> {
                             contentPadding: EdgeInsets.all(18),
                           ),
                           maxLines: 5,
+                          onChanged: (value) {
+                            setState(() {});
+                          },
                         ),
                       if (isTypeLink)
                         TextField(
-                          controller: descriptionController,
+                          controller: linkController, // Use linkController here
                           decoration: InputDecoration(
                             fillColor: Colors.white.withOpacity(0.4),
                             filled: true,
                             hintText: "Enter Link Here",
                             border: InputBorder.none,
                             contentPadding: EdgeInsets.all(18),
+                          ),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
+                        ),
+                      const SizedBox(height: 20),
+                      if (isFormValid)
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (isTypeImage) {
+                              try {
+                                String postUrl = await StorageMethod()
+                                    .uploadImagetoStorage('posts', bannerFile!);
+                                print(postUrl);
+                              } catch (e) {
+                                showSnackBar(context, "Error uploading image");
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.black,
+                          ),
+                          child: Text(
+                            "POST",
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(fontSize: 18, color: Colors.white),
                           ),
                         ),
                     ],
