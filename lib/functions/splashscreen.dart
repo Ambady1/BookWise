@@ -1,4 +1,3 @@
-
 import 'package:bookwise/functions/admin/mainpage/adminMainscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,38 +16,40 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen(context , FirebaseAuth.instance.currentUser);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _navigateToNextScreen(context, FirebaseAuth.instance.currentUser);
+    });
   }
 
   void _navigateToNextScreen(BuildContext context, User? user) async {
-  if (user != null) {
-    // Check if the user is in the 'libraries' collection using the user ID
-    final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('libraries')
-        .doc(user.uid)
-        .get();
+    if (user != null) {
+      // Check if the user is in the 'libraries' collection using the user ID
+      final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('libraries')
+          .doc(user.uid)
+          .get();
 
-    if (userDoc.exists) {
-      // User is in the 'libraries' collection, navigate to AdminMainScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AdminMainScreen()),
-      );
+      if (userDoc.exists) {
+        // User is in the 'libraries' collection, navigate to AdminMainScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminMainScreen()),
+        );
+      } else {
+        // User is not in the 'libraries' collection, navigate to MainScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      }
     } else {
-      // User is not in the 'libraries' collection, navigate to MainScreen
+      // User is not authenticated, navigate to LoginPage
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     }
-  } else {
-    // User is not authenticated, navigate to LoginPage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
