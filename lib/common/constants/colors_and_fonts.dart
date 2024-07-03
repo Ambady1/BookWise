@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui';
 
 TextTheme textTheme = TextTheme(
   displayLarge: GoogleFonts.lato(
@@ -31,7 +32,10 @@ TextTheme textTheme = TextTheme(
 class AppColors {
   static Color lightBlue = const Color(0xffCFEDEF);
   static Color black = Colors.black87;
-  static Color lightyellow = Color.fromARGB(255, 227, 79, 195);
+  static Color white = const Color(0xffE9E8E6);
+  static Color textColor = Colors.white;
+  static Color blackbg = const Color.fromARGB(255, 46, 42, 42);
+  static Color reactionBlue = Color.fromARGB(255, 169, 228, 232);
 }
 
 List<Color> boxColors = const [

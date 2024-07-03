@@ -1,20 +1,20 @@
+
 import 'package:bookwise/common/toast.dart';
+import 'package:bookwise/functions/admin/adminsighnup.dart';
+import 'package:bookwise/functions/admin/mainpage/adminMainscreen.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
-import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
-import 'package:bookwise/functions/admin/adminlogin.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class AdminLoginPage extends StatefulWidget {
+  const AdminLoginPage({Key? key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AdminLoginPage> createState() => _AdminLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AdminLoginPageState extends State<AdminLoginPage> {
   bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text("Login"),
+        title: const Text("Admin Login"),
       ),
       body: Center(
         child: Padding(
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Login",
+                "Admin Login",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -65,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  _signIn();
+                  _adminsignIn();
                 },
                 child: Container(
                   width: double.infinity,
@@ -103,40 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUp()),
+                        MaterialPageRoute(builder: (context) => const AdminSignUp()),
                         (route) => false,
                       );
                     },
                     child: const Text(
                       "Sign Up",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Are you a librarian?"),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminLoginPage()),
-                          (route) => false);
-                    },
-                    child: const Text(
-                      "Login",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -152,36 +124,26 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _signIn() async {
+  void _adminsignIn() async {
     setState(() {
       _isSigning = true;
     });
 
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+    String email = _emailController.text;
+    String password = _passwordController.text;
 
-    try {
-      User? user = await _auth.signInWithEmailAndPassword(email, password);
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-      setState(() {
-        _isSigning = false;
-      });
+    setState(() {
+      _isSigning = false;
+    });
 
-      if (user != null) {
-        showToast(message: "User is successfully signed in");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
-      } else {
-        showToast(message: "Unknown error occurred, please try again");
-      }
-    } catch (e) {
-      setState(() {
-        _isSigning = false;
-      });
-
-      showToast(message: "Error signing in: $e");
+    if (user != null) {
+      showToast(message: "Admin is successfully signed in");
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const AdminMainScreen()));
+    } else {
+      showToast(message: "Invalid email or password");
     }
   }
 }
