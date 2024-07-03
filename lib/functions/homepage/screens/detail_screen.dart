@@ -206,33 +206,37 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           /*print(snapshot.data?.volumeInfo?.title);
                                           print(snapshot.data?.id);*/
                                           final id = snapshot.data?.id;
-                                          final title = snapshot.data?.volumeInfo?.title;
- if (id != null && title != null) {
-      bool success = await addToWishlist(id, title);
-      if (success) {
-        // Handle success, e.g., navigate to another screen or update UI
-        Fluttertoast.showToast(
-      msg: "Book added to wishlist",
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-      } else {
-        // Handle failure, e.g., show error message
-        Fluttertoast.showToast(
-      msg: "Failed",
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-      }
-    } else {
-      print('ID or title is null');
-    }                                        },
+                                          final title =
+                                              snapshot.data?.volumeInfo?.title;
+                                          final imageURL = snapshot.data?.volumeInfo?.imageLinks?.thumbnail ?? errorLink;
+                                          if (id != null && title != null) {
+                                            bool success =
+                                                await addToWishlist(id, title,imageURL);
+                                            if (success) {
+                                              // Handle success, e.g., navigate to another screen or update UI
+                                              Fluttertoast.showToast(
+                                                msg: "Book added to wishlist",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: Colors.grey,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              );
+                                            } else {
+                                              // Handle failure, e.g., show error message
+                                              Fluttertoast.showToast(
+                                                msg: "Failed",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: Colors.grey,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              );
+                                            }
+                                          } else {
+                                            print('ID or title is null');
+                                          }
+                                        },
                                         style: OutlinedButton.styleFrom(
                                             side: const BorderSide(
                                                 width: 1, color: Colors.white)),
