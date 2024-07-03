@@ -18,7 +18,7 @@ class _AddPostTypeState extends State<AddPostType> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final linkController = TextEditingController();
-
+  bool isloading = false;
   File? bannerFile;
 
   bool get isFormValid {
@@ -100,111 +100,152 @@ class _AddPostTypeState extends State<AddPostType> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: titleController,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white.withOpacity(0.4),
-                          filled: true,
-                          hintText: "Enter Title Here",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(18),
+                if (!isloading)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white.withOpacity(0.4),
+                            filled: true,
+                            hintText: "Enter Title Here",
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(18),
+                          ),
+                          maxLength: 30,
+                          onChanged: (value) {
+                            setState(() {});
+                          },
                         ),
-                        maxLength: 30,
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      if (isTypeImage)
-                        GestureDetector(
-                          onTap: selectBannerImage,
-                          child: DottedBorder(
-                            borderType: BorderType.RRect,
-                            radius: const Radius.circular(10),
-                            dashPattern: const [10, 4],
-                            strokeCap: StrokeCap.round,
-                            color: Colors.white.withOpacity(0.4),
-                            child: Container(
-                              width: double.infinity,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: bannerFile != null
-                                  ? Image.file(
-                                      bannerFile!,
-                                    )
-                                  : const Center(
-                                      child: Icon(
-                                        Icons.camera_alt_outlined,
-                                        size: 40,
-                                        color: Colors.white,
+                        const SizedBox(height: 10),
+                        if (isTypeImage)
+                          GestureDetector(
+                            onTap: selectBannerImage,
+                            child: DottedBorder(
+                              borderType: BorderType.RRect,
+                              radius: const Radius.circular(10),
+                              dashPattern: const [10, 4],
+                              strokeCap: StrokeCap.round,
+                              color: Colors.white.withOpacity(0.4),
+                              child: Container(
+                                width: double.infinity,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: bannerFile != null
+                                    ? Image.file(
+                                        bannerFile!,
+                                      )
+                                    : const Center(
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          size: 40,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
-                        ),
-                      if (isTypeText)
-                        TextField(
-                          controller: descriptionController,
-                          decoration: InputDecoration(
-                            fillColor: Colors.white.withOpacity(0.4),
-                            filled: true,
-                            hintText: "Enter Description Here",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(18),
+                        if (isTypeText)
+                          TextField(
+                            controller: descriptionController,
+                            decoration: InputDecoration(
+                              fillColor: Colors.white.withOpacity(0.4),
+                              filled: true,
+                              hintText: "Enter Description Here",
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(18),
+                            ),
+                            maxLines: 5,
+                            onChanged: (value) {
+                              setState(() {});
+                            },
                           ),
-                          maxLines: 5,
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                        ),
-                      if (isTypeLink)
-                        TextField(
-                          controller: linkController, // Use linkController here
-                          decoration: InputDecoration(
-                            fillColor: Colors.white.withOpacity(0.4),
-                            filled: true,
-                            hintText: "Enter Link Here",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(18),
+                        if (isTypeLink)
+                          TextField(
+                            controller:
+                                linkController, // Use linkController here
+                            decoration: InputDecoration(
+                              fillColor: Colors.white.withOpacity(0.4),
+                              filled: true,
+                              hintText: "Enter Link Here",
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.all(18),
+                            ),
+                            onChanged: (value) {
+                              setState(() {});
+                            },
                           ),
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                        ),
-                      const SizedBox(height: 20),
-                      if (isFormValid)
-                        ElevatedButton(
-                          onPressed: () async {
-                            if (isTypeImage) {
-                              try {
-                                String postUrl = await StorageMethod()
-                                    .uploadImagetoStorage('posts', bannerFile!);
-                                print(postUrl);
-                              } catch (e) {
-                                showSnackBar(context, "Error uploading image");
+                        const SizedBox(height: 20),
+                        if (isFormValid)
+                          ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                isloading = true;
+                              });
+                              if (isTypeImage) {
+                                try {
+                                  List<String> result = await StorageMethod()
+                                      .uploadImagetoStorage(
+                                          'posts', bannerFile!);
+                                  await FireServices().createPost(
+                                      postType: 'ImagePost',
+                                      postImageId: result[0],
+                                      postImage: result[1],
+                                      title: titleController.text);
+                                } catch (e) {
+                                  showSnackBar(
+                                      context, "Error uploading image");
+                                }
+                              } else if (isTypeText) {
+                                try {
+                                  await FireServices().createPost(
+                                      postType: 'TextPost',
+                                      title: titleController.text,
+                                      description: descriptionController.text);
+                                } catch (e) {
+                                  showSnackBar(context, "Error uploading post");
+                                }
+                              } else if (isTypeLink) {
+                                try {
+                                  await FireServices().createPost(
+                                      postType: 'LinkPost',
+                                      title: titleController.text,
+                                      link: linkController.text);
+                                } catch (e) {
+                                  showSnackBar(context, "Error uploading post");
+                                }
                               }
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.black,
+                              setState(() {
+                                isloading = false;
+                              });
+                              Navigator.of(context).pop();
+                              showSnackBar(
+                                  context, "Suceesfully added you post");
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.black,
+                            ),
+                            child: Text(
+                              "POST",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium
+                                  ?.copyWith(fontSize: 18, color: Colors.white),
+                            ),
                           ),
-                          child: Text(
-                            "POST",
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
+                  )
+                else
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.white,
+                    ),
                   ),
-                ),
               ],
             ),
           ),

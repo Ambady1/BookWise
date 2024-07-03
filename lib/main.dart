@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:bookwise/common/constants/firebase_options.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,10 +25,16 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AppNotifier()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: textTheme),
-        home: const SplashScreen(),
+      child: ScreenUtilInit(
+        designSize: Size(375, 812),
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(textTheme: textTheme),
+            home: child,
+          );
+        },
+        child: SplashScreen(),
       ),
     );
   }
