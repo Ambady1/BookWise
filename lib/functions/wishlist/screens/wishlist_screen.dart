@@ -2,6 +2,7 @@ import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/homepage/screens/detail_screen.dart';
 import 'package:bookwise/functions/wishlist/repositories/firebasecall_wishlist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Wishlist extends StatefulWidget {
@@ -47,6 +48,7 @@ class _WishlistState extends State<Wishlist> {
               ),
             ),
           ),
+          const SizedBox(height: 10.0),
           Expanded(
               child: StreamBuilder<List<Map<String, dynamic>>>(
             stream: streamWishlist(),
@@ -79,52 +81,59 @@ class _WishlistState extends State<Wishlist> {
                 itemBuilder: (context, index) {
                   Map<String, dynamic> book = wishlist[index];
                   return GridTile(
+                    child: SizedBox(
+                      height: 300.h, // Adjust height as needed
                       child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Card(
-                        elevation: 2,
-                        margin: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Container(
-                          height: 150.h, // Adjust height as needed
-                          width: double.infinity,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailsScreen(
-                                  id: book['id'])));
-                              },
-                              child: Image.network(
-                                book['imageUrl'], // Ensure you define errorLink
-                                fit: BoxFit.cover,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Card(
+                            elevation: 2,
+                            margin: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Container(
+                              height: 150.h, // Adjust height as needed
+                              width: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                DetailsScreen(id: book['id'])));
+                                  },
+                                  child: Image.network(
+                                    book[
+                                        'imageUrl'], // Ensure you define errorLink
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      Text(
-                        book['title'] ?? 'No title',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                          const SizedBox(height: 10.0),
+                          Expanded(
+                            child: Text(
+                              book['title'] ?? 'No title',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
                             ),
+                          ),
+                          const SizedBox(height: 10.0),
+                        ],
                       ),
-                      const SizedBox(height: 2.0),
-                    ],
-                  ),
+                    ),
                   );
                 },
               );
