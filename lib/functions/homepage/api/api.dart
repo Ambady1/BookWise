@@ -15,7 +15,7 @@ class BookApi {
   Future getBooks() async {
     final response = await http.get(
       Uri.parse(
-          "https://www.googleapis.com/books/v1/volumes?q=Fiction&maxResults=40"),
+          "https://www.googleapis.com/books/v1/volumes?q=Fiction&maxResults=39"),
       // headers: headers,
     );
 
@@ -27,7 +27,7 @@ class BookApi {
   Future searchBooks({required String searchBook}) async {
     final response = await http.get(
       Uri.parse(
-          "https://www.googleapis.com/books/v1/volumes?q=$searchBook&maxResults=39"),
+          "https://www.googleapis.com/books/v1/volumes?q=$searchBook&orderBy=relevance&maxResults=10"),
       // headers: headers,
     );
 

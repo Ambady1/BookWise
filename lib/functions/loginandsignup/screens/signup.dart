@@ -1,3 +1,4 @@
+import 'package:bookwise/common/assignAvatar.dart';
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/admin/adminsighnup.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
@@ -192,6 +193,9 @@ class _SignUpState extends State<SignUp> {
 
 Future<void> addUserDetails(String username, String email, String uid) async {
   try {
+    
+   String profilePicture =await  getAvatarUrls();
+
     String nickname =
         generateUniqueReaderName(); // Call the imported function to generate nickname
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -201,6 +205,7 @@ Future<void> addUserDetails(String username, String email, String uid) async {
       'nickname': nickname, // Store the generated nickname
       'followers': [],
       'following': [],
+      'profilePicture':profilePicture,
     });
   } catch (e) {
     print('Error adding user details: $e');
