@@ -27,7 +27,8 @@ class ProfileWidget extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 40,
+                backgroundImage:NetworkImage (userDetails['profilePicture']),
+                radius: 40
                 // backgroundImage: AssetImage('49457.jpg'),
               ),
               Container(

@@ -1,8 +1,10 @@
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/booking/booking.dart';
+import 'package:bookwise/functions/wishlist/repositories/firebasecall_wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 import 'package:bookwise/functions/homepage/model/detailmodel.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -195,7 +197,41 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         ),
                                       ),
                                       OutlinedButton.icon(
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          /*print(snapshot.data?.volumeInfo?.title);
+                                          print(snapshot.data?.id);*/
+                                          final id = snapshot.data?.id;
+                                          final title =
+                                              snapshot.data?.volumeInfo?.title;
+                                          final imageURL = snapshot.data?.volumeInfo?.imageLinks?.thumbnail ?? errorLink;
+                                          if (id != null && title != null) {
+                                            bool success =
+                                                await addToWishlist(id, title,imageURL);
+                                            if (success) {
+                                              // Handle success, e.g., navigate to another screen or update UI
+                                              Fluttertoast.showToast(
+                                                msg: "Book added to wishlist",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: Colors.grey,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              );
+                                            } else {
+                                              // Handle failure, e.g., show error message
+                                              Fluttertoast.showToast(
+                                                msg: "Failed",
+                                                toastLength: Toast.LENGTH_LONG,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor: Colors.grey,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0,
+                                              );
+                                            }
+                                          } else {
+                                            print('ID or title is null');
+                                          }
+                                        },
                                         style: OutlinedButton.styleFrom(
                                             side: const BorderSide(
                                                 width: 1, color: Colors.white)),

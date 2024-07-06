@@ -8,7 +8,7 @@ import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
 import 'package:bookwise/functions/admin/adminlogin.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -128,14 +128,15 @@ class _LoginPageState extends State<LoginPage> {
                     width: 5,
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => AdminLoginPage()),
                           (route) => false);
                     },
                     child: const Text(
-                      "login",
+                      "Login",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
@@ -165,12 +166,7 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = false;
     });
 
-    if (user != null) {
-      showToast(message: "User is successfully signed in");
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const MainScreen()));
-    } else {
-      showToast(message: "some error occurred");
+      showToast(message: "Error signing in: $e");
     }
   }
 }

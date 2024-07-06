@@ -34,7 +34,7 @@ class ZoneBooks extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.length,
+                    itemCount: snapshot.data?.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -65,7 +65,7 @@ class ZoneBooks extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image(
                                       image: NetworkImage(
-                                        "${snapshot.data![index].items![0].volumeInfo?.imageLinks?.thumbnail ?? errorLink}",
+                                        snapshot.data?[index].items?[0].volumeInfo?.imageLinks?.thumbnail ?? errorLink,
                                       ),
                                       fit: BoxFit.fill,
                                     ),
@@ -73,7 +73,7 @@ class ZoneBooks extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "${snapshot.data![index].items![0].volumeInfo?.title}",
+                                "${snapshot.data?[index].items![0].volumeInfo?.title}",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context)
