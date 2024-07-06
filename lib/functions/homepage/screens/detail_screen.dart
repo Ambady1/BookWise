@@ -1,4 +1,5 @@
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/functions/booking/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 import 'package:bookwise/functions/homepage/model/detailmodel.dart';
@@ -176,18 +177,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       OutlinedButton(
-                                        onPressed: () async {
-                                          Uri url = Uri.parse(
-                                              "${snapshot.data?.volumeInfo?.previewLink}");
+                                        onPressed: () {
+                                                       showLibraries(context,"${snapshot.data?.volumeInfo?.title ?? "Censored"}");
 
-                                          if (await canLaunchUrl(url)) {
-                                            await launchUrl(url,
-                                                mode: LaunchMode
-                                                    .externalApplication);
-                                          } else {
-                                            throw 'could not launch $url';
-                                          }
-                                        },
+
+                                                      },  
+                                      
                                         style: OutlinedButton.styleFrom(
                                             side: const BorderSide(
                                                 width: 1, color: Colors.white)),

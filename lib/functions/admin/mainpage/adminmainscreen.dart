@@ -1,4 +1,5 @@
 import 'package:bookwise/functions/admin/adminhomepage.dart';
+import 'package:bookwise/functions/admin/bookingdetails.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 
@@ -12,7 +13,8 @@ class AdminMainScreen extends StatefulWidget {
 class _AdminMainScreenState extends State<AdminMainScreen> {
   int _currentIndex = 0;
   final screens = [
-  AdminHomePage()
+  const AdminHomePage(),
+  const Bookings(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -34,8 +36,8 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Community',
+            icon: Icon(Icons.book_online),
+            label: 'Bookings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
