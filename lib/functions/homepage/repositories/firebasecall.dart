@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 Future<List<String>> updateNotifierWithBooks() async {
   List<String> zoneBooks = [];
 
+
   // Get the current user's ID
   User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -35,6 +36,7 @@ Future<List<String>> updateNotifierWithBooks() async {
 
   if (librariesSnapshot.docs.isEmpty) {
     print("No libraries found in the user's city.");
+
     throw Error();
   }
 

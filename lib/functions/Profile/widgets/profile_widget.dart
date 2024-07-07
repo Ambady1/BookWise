@@ -1,5 +1,7 @@
 import 'package:bookwise/functions/Profile/screens/UserPostFeedScreen.dart';
 import 'package:bookwise/functions/Profile/screens/chatpage.dart';
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,6 +89,7 @@ class ProfileWidget extends StatelessWidget {
                         color: Color.fromARGB(255, 13, 134, 204),
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
+
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -180,6 +183,7 @@ class ProfileWidget extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+
                 const SizedBox(height: 10),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance

@@ -1,3 +1,4 @@
+import 'package:bookwise/functions/admin/adminProfile.dart';
 import 'package:bookwise/functions/admin/adminhomepage.dart';
 import 'package:bookwise/functions/admin/bookingdetails.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,9 @@ class AdminMainScreen extends StatefulWidget {
 class _AdminMainScreenState extends State<AdminMainScreen> {
   int _currentIndex = 0;
   final screens = [
-  const AdminHomePage(),
-  const Bookings(),
+    AdminHomePage(),
+    Bookings(),
+    AdminProfile(),
   ];
   @override
   Widget build(BuildContext context) {

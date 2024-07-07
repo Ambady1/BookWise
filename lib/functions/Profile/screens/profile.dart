@@ -1,3 +1,4 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/Profile/widgets/profile_widget.dart';
 import 'package:bookwise/functions/Profile/widgets/app_drawer.dart';
 import 'package:bookwise/functions/Profile/repository/repository.dart';
@@ -13,7 +14,6 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-
   @override
   void initState() {
     super.initState();
@@ -33,12 +33,12 @@ class _MyProfileState extends State<MyProfile> {
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.blackbg,
             appBar: AppBar(
               elevation: 0,
-              title: const Text(
+              title: Text(
                 'Profile',
-                style: TextStyle(color: Colors.black87),
+                style: TextStyle(color: AppColors.black),
               ),
               leading: Builder(
                 builder: (context) => IconButton(
@@ -48,7 +48,7 @@ class _MyProfileState extends State<MyProfile> {
                   },
                 ),
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.lightBlue,
             ),
             drawer: AppDrawer(userDetails: userDetails), // Use the AppDrawer
             body: SingleChildScrollView(
