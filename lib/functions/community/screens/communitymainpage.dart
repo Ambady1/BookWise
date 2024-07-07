@@ -19,7 +19,7 @@ class _MainPageState extends State<MainPage> {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 46, 42, 42),
+      backgroundColor: AppColors.blackbg,
       body: Stack(
         children: [
           CustomScrollView(

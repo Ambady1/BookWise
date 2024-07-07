@@ -22,7 +22,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 46, 42, 42),
+      backgroundColor: AppColors.blackbg,
       body: SingleChildScrollView(
         //physics: const BouncingScrollPhysics(),
         child: Column(

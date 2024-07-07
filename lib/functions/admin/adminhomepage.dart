@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/functions/admin/listBooks.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,30 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  String? _fileContent;
+  Future<String> _getCurrentUsername() async {
+    // Get current user information
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User is not authenticated.');
+    }
+    DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('libraries').doc(user.uid);
+    try {
+      DocumentSnapshot userSnapshot = await userDocRef.get();
+      if (userSnapshot.exists) {
+        var data = userSnapshot.data() as Map<String, dynamic>?; // Type casting
+        if (data != null && data.containsKey('username')) {
+          return data['username'] as String;
+        } else {
+          throw Exception('Username not found in the user document.');
+        }
+      } else {
+        throw Exception('User document not found in Firestore.');
+      }
+    } catch (e) {
+      throw Exception('Error getting user document: $e');
+    }
+  }
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -27,9 +51,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     if (result != null) {
       File file = File(result.files.single.path!);
       String csvData = await file.readAsString();
-      setState(() {
-        _fileContent = csvData;
-      });
       await _processCsvData(csvData);
     } else {
       // User canceled the file picker
@@ -37,50 +58,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
   }
 
   Future<void> _processCsvData(String csvData) async {
-    List<List<dynamic>> csvTable = CsvToListConverter().convert(csvData);
+    String currentUserName = await _getCurrentUsername();
+    List<List<dynamic>> csvTable = const CsvToListConverter().convert(csvData);
 
     CollectionReference collectionRef =
         FirebaseFirestore.instance.collection('books');
     QuerySnapshot booksSnapshot = await collectionRef.get();
     if (booksSnapshot.docs.isEmpty) {
-      // Collection doesn't exist, create a sample document (optional)
-      await collectionRef.doc().set({
-        'title': 'Sample Book',
-        'libraries': [
-          {'libraryName': 'Default Library', 'copyCount': 1},
-        ],
-      });
-    }
-
-    // Get current user information
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      print('User is not authenticated.');
-      return;
-    }
-
-    String? currentUserName;
-    DocumentReference userDocRef =
-        FirebaseFirestore.instance.collection('libraries').doc(user.uid);
-
-    try {
-      DocumentSnapshot userSnapshot = await userDocRef.get();
-      if (userSnapshot.exists) {
-        var data = userSnapshot.data() as Map<String, dynamic>?; // Type casting
-        if (data != null && data.containsKey('username')) {
-          currentUserName = data['username'];
-        } else {
-          print('Username not found in the user document.');
-        }
-      } else {
-        print('User document not found in Firestore.');
-      }
-    } catch (e) {
-      print('Error getting user document: $e');
-    }
-
-    if (currentUserName == null) {
-      print('Current user name is null.');
+      print("No Collection named books");
       return;
     }
 
@@ -106,7 +91,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
         bool libraryExists = false;
         for (var library in libraries) {
-          if (library is Map && library['username'] == currentUserName) {
+          if (library is Map && library['libraryName'] == currentUserName) {
             library['copyCount'] += copyCount;
             libraryExists = true;
             break;
@@ -132,6 +117,28 @@ class _AdminHomePageState extends State<AdminHomePage> {
             }
           ],
         });
+      }
+
+      // Create or update the user's library collection
+      DocumentReference userLibraryDocRef =
+          FirebaseFirestore.instance.collection(currentUserName).doc(title);
+
+      try {
+        DocumentSnapshot userLibrarySnapshot = await userLibraryDocRef.get();
+        if (userLibrarySnapshot.exists) {
+          // Update existing document
+          await userLibraryDocRef.update({
+            'copyCount': FieldValue.increment(copyCount),
+          });
+        } else {
+          // Create new document
+          await userLibraryDocRef.set({
+            'title': title,
+            'copyCount': copyCount,
+          });
+        }
+      } catch (e) {
+        print('Error updating user library document: $e');
       }
     }
   }
@@ -160,20 +167,20 @@ class _AdminHomePageState extends State<AdminHomePage> {
     }
   }
 
-  Future<void> _logout(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    } catch (e) {
-      print('Error logging out: $e');
-      // Handle error if needed
-    }
-  }
+  // Future<void> _logout(BuildContext context) async {
+  //   try {
+  //     await FirebaseAuth.instance.signOut();
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const LoginPage(),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print('Error logging out: $e');
+  //     // Handle error if needed
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +189,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While fetching data, show a loading indicator or placeholder
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -197,7 +204,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             );
           } else if (!snapshot.hasData || snapshot.data == null) {
             // If no data is available, handle it accordingly
-            return Scaffold(
+            return const Scaffold(
               body: Center(
                 child: Text('No data available'),
               ),
@@ -206,6 +213,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             // Data fetched successfully, display the UI with fetched data
             final data = snapshot.data!;
             return Scaffold(
+              backgroundColor: AppColors.blackbg,
               body: Stack(
                 children: [
                   SingleChildScrollView(
@@ -229,7 +237,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                 const Spacer(),
                                 Text(
                                   '${data['username'] ?? 'Admin'}',
-                                  style: Theme.of(context).textTheme.displayLarge,
+                                  style:
+                                      Theme.of(context).textTheme.displayLarge,
                                 ),
                                 const Spacer(
                                   flex: 5,
@@ -239,31 +248,130 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           ),
                         ),
                         const SizedBox(height: 50),
-                        Center(
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Text(
-                                'Add Files',
-                                style: Theme.of(context).textTheme.headline4,
-                              ),
-                              const SizedBox(height: 20),
-                              ElevatedButton.icon(
-                                onPressed: _pickFile,
-                                icon: Icon(Icons.upload_file),
-                                label: Text('Add File'),
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 50,
-                                    vertical: 20,
-                                  ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Card(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
+                                  elevation: 4,
+                                  child: InkWell(
+                                    onTap: () {
+                                      _pickFile();
+                                    },
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.upload_file,
+                                            size: 50,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Add Book (csv)',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 4,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      try {
+                                        String username =
+                                            await _getCurrentUsername();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ListBooks(username: username),
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        print('Error: $e');
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.info,
+                                            size: 50,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'List Books',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  elevation: 4,
+                                  child: InkWell(
+                                    onTap: () {
+                                      // Dummy option logic
+                                    },
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.settings,
+                                            size: 50,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Edit Data',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),

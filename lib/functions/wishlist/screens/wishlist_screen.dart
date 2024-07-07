@@ -18,7 +18,7 @@ class _WishlistState extends State<Wishlist> {
     // Ensure the height variable is defined
     final double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 46, 42, 42),
+      backgroundColor: AppColors.blackbg,
       body: Column(
         children: [
           Container(

@@ -1,3 +1,4 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -27,10 +28,10 @@ class ProfileWidget extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage:NetworkImage (userDetails['profilePicture']),
-                radius: 40
-                // backgroundImage: AssetImage('49457.jpg'),
-              ),
+                  backgroundImage: NetworkImage(userDetails['profilePicture']),
+                  radius: 40
+                  // backgroundImage: AssetImage('49457.jpg'),
+                  ),
               Container(
                 padding: EdgeInsets.only(left: 20),
                 child: Column(
@@ -39,7 +40,7 @@ class ProfileWidget extends StatelessWidget {
                     Text(
                       userDetails['username'],
                       style: TextStyle(
-                        color: Color.fromARGB(255, 1, 29, 46),
+                        color: AppColors.textColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -88,9 +89,12 @@ class ProfileWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30.0),
               ),
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-              backgroundColor: FirebaseAuth.instance.currentUser!.uid == userDetails['uid']
-                  ? Colors.grey
-                  : (isFollowing ? Colors.blueAccent : Color.fromARGB(255, 13, 134, 204)),
+              backgroundColor:
+                  FirebaseAuth.instance.currentUser!.uid == userDetails['uid']
+                      ? Colors.grey
+                      : (isFollowing
+                          ? Colors.blueAccent
+                          : Color.fromARGB(255, 13, 134, 204)),
               foregroundColor: Colors.white,
               textStyle: TextStyle(fontSize: 16.0),
             ),
@@ -99,7 +103,9 @@ class ProfileWidget extends StatelessWidget {
               children: [
                 FirebaseAuth.instance.currentUser!.uid == userDetails['uid']
                     ? Icon(Icons.person_add, size: 18.0)
-                    : (isFollowing ? Icon(Icons.check, size: 18.0) : Icon(Icons.add, size: 18.0)),
+                    : (isFollowing
+                        ? Icon(Icons.check, size: 18.0)
+                        : Icon(Icons.add, size: 18.0)),
                 SizedBox(width: 8.0),
                 Text(
                   FirebaseAuth.instance.currentUser!.uid == userDetails['uid']
