@@ -38,15 +38,15 @@ Future<List<Map<String, dynamic>>> fetchLibrariesWithBook(
 
         return librariesList;
       } else {
-        print('No or invalid libraries found in Firestore for book: $bookName');
+        // print('No or invalid libraries found in Firestore for book: $bookName');
         return [];
       }
     } else {
-      print('No book found with the name: $bookName');
+      // print('No book found with the name: $bookName');
       return [];
     }
   } catch (e) {
-    print('Error fetching libraries: $e');
+    //  print('Error fetching libraries: $e');
     return [];
   }
 }
@@ -57,7 +57,7 @@ void showLibraries(BuildContext context, String bookName) async {
         await fetchLibrariesWithBook(bookName);
 
     // Debugging print statements
-    print('Fetched libraries for bookId $bookName: $libraries');
+    // print('Fetched libraries for bookId $bookName: $libraries');
 
     Navigator.push(
       context,
@@ -67,7 +67,7 @@ void showLibraries(BuildContext context, String bookName) async {
       ),
     );
   } catch (e) {
-    print('Error fetching libraries: $e');
+    // print('Error fetching libraries: $e');
     // Handle error appropriately
   }
 }

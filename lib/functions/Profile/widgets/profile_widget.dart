@@ -54,8 +54,8 @@ class ProfileWidget extends StatelessWidget {
                         children: [
                           Text(
                             userDetails['username'],
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 1, 29, 46),
+                            style: TextStyle(
+                              color: AppColors.textColor,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -75,9 +75,11 @@ class ProfileWidget extends StatelessWidget {
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [const SizedBox(height: 20),
-                      ..._buildDescription(updatedUserDetails['description'] ?? '')],
-                  
+                  children: [
+                    const SizedBox(height: 20),
+                    ..._buildDescription(
+                        updatedUserDetails['description'] ?? '')
+                  ],
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -89,7 +91,6 @@ class ProfileWidget extends StatelessWidget {
                         color: Color.fromARGB(255, 13, 134, 204),
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -115,12 +116,13 @@ class ProfileWidget extends StatelessWidget {
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 12.0),
-                        backgroundColor: FirebaseAuth.instance.currentUser!.uid ==
-                                userDetails['uid']
-                            ? Colors.grey
-                            : (isFollowing
-                                ? Colors.blueAccent
-                                : const Color.fromARGB(255, 13, 134, 204)),
+                        backgroundColor:
+                            FirebaseAuth.instance.currentUser!.uid ==
+                                    userDetails['uid']
+                                ? Colors.grey
+                                : (isFollowing
+                                    ? Colors.blueAccent
+                                    : const Color.fromARGB(255, 13, 134, 204)),
                         foregroundColor: Colors.white,
                         textStyle: const TextStyle(fontSize: 16.0),
                       ),
@@ -141,7 +143,6 @@ class ProfileWidget extends StatelessWidget {
                                 : (isFollowing ? 'Following' : 'Follow'),
                           ),
                         ],
-                        
                       ),
                     ),
                     ElevatedButton(
@@ -149,29 +150,29 @@ class ProfileWidget extends StatelessWidget {
                         backgroundColor: Colors.blueAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
-                          
                         ),
-                            padding: const EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 12.0),
                       ),
-                  
-
                       onPressed: () {
                         Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatPage(
-          chatUserId: userDetails['uid'],
-          chatUserName: userDetails['username'],
-        chatUserProfilePic: userDetails['profilePicture'],
-        ),
-      ),
-    );
-                       }, 
-                    child: const Text('Message',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),),)
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                              chatUserId: userDetails['uid'],
+                              chatUserName: userDetails['username'],
+                              chatUserProfilePic: userDetails['profilePicture'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Message',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -183,7 +184,6 @@ class ProfileWidget extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-
                 const SizedBox(height: 10),
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -234,8 +234,8 @@ class ProfileWidget extends StatelessWidget {
     return description.split('\n').map((line) {
       return Text(
         line,
-        style: const TextStyle(
-          color: Colors.black,
+        style: TextStyle(
+          color: AppColors.textColor,
           fontSize: 14,
         ),
       );

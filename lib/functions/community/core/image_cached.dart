@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CachedImage extends StatelessWidget {
-  String? imageURL;
+  final String? imageURL;
   CachedImage(this.imageURL, {super.key});
 
   @override

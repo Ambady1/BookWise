@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:csv/csv.dart';
-import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -65,13 +64,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
         FirebaseFirestore.instance.collection('books');
     QuerySnapshot booksSnapshot = await collectionRef.get();
     if (booksSnapshot.docs.isEmpty) {
-      print("No Collection named books");
+      //print("No Collection named books");
       return;
     }
 
     for (var row in csvTable) {
       if (row.length < 2) {
-        print('Invalid row format: $row');
+        // print('Invalid row format: $row');
         continue;
       }
 
@@ -138,7 +137,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           });
         }
       } catch (e) {
-        print('Error updating user library document: $e');
+        // print('Error updating user library document: $e');
       }
     }
   }
@@ -147,7 +146,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        print('User not authenticated');
+        // print('User not authenticated');
         return null;
       }
 
@@ -158,11 +157,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         final data = userDoc.data();
         return data;
       } else {
-        print('Document does not exist');
+        // print('Document does not exist');
         return null;
       }
     } catch (e) {
-      print('Error fetching library details: $e');
+      //print('Error fetching library details: $e');
       return null;
     }
   }
@@ -255,6 +254,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: Card(
+                                  color: AppColors.cardColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -271,16 +271,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           Icon(
                                             Icons.upload_file,
                                             size: 50,
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: AppColors.white,
                                           ),
                                           const SizedBox(height: 10),
-                                          Text(
-                                            'Add Book (csv)',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium,
-                                          ),
+                                          Text('Add Book (csv)',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headlineMedium
+                                                  ?.copyWith(
+                                                      color:
+                                                          AppColors.textColor)),
                                         ],
                                       ),
                                     ),
@@ -291,6 +291,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: Card(
+                                  color: AppColors.cardColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
@@ -308,7 +309,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           ),
                                         );
                                       } catch (e) {
-                                        print('Error: $e');
+                                        // print('Error: $e');
                                       }
                                     },
                                     borderRadius: BorderRadius.circular(15),
@@ -319,51 +320,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                           Icon(
                                             Icons.info,
                                             size: 50,
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: AppColors.white,
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
                                             'List Books',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headlineMedium,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              SizedBox(
-                                width: double.infinity,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  elevation: 4,
-                                  child: InkWell(
-                                    onTap: () {
-                                      // Dummy option logic
-                                    },
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        children: [
-                                          Icon(
-                                            Icons.settings,
-                                            size: 50,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            'Edit Data',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium,
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                    color: AppColors.textColor),
                                           ),
                                         ],
                                       ),
