@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children:[
                   Image.asset(
                     "assets/final.png",
@@ -53,8 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 300,
                  )
                 ]
-              ),
-              const SizedBox(height: 30),
+              ),    
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",

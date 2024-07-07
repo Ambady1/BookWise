@@ -1,5 +1,5 @@
 import 'package:bookwise/functions/Profile/screens/chatpage.dart';
-import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/common/constants/colors_and_fonts.dart'; // Ensure this import is correct
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -65,7 +65,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userDetails['username'],
+                            widget.userDetails['username'],
                             style: TextStyle(
                               color: AppColors.textColor,
                               fontSize: 20,
@@ -89,9 +89,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-
-                    ..._buildDescription(
-                        updatedUserDetails['description'] ?? '')
+                    ..._buildDescription(updatedUserDetails['description'] ?? '')
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -129,14 +127,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 12.0),
-
-                        backgroundColor:
-                            FirebaseAuth.instance.currentUser!.uid ==
-                                    userDetails['uid']
-                                ? Colors.grey
-                                : (isFollowing
-                                    ? Colors.blueAccent
-                                    : const Color.fromARGB(255, 13, 134, 204)),
+                        backgroundColor: FirebaseAuth.instance.currentUser!.uid ==
+                                widget.userDetails['uid']
+                            ? Colors.grey
+                            : (widget.isFollowing
+                                ? Colors.blueAccent
+                                : const Color.fromARGB(255, 13, 134, 204)),
                         foregroundColor: Colors.white,
                         textStyle: const TextStyle(fontSize: 16.0),
                       ),
@@ -159,7 +155,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ],
                       ),
                     ),
-
                     if (FirebaseAuth.instance.currentUser!.uid !=
                         widget.userDetails['uid'])
                       ElevatedButton(
@@ -195,15 +190,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 ),
                 const SizedBox(height: 50),
                 ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blueAccent, // background color
-    foregroundColor: Colors.white, // text color
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent, // background color
+                    foregroundColor: Colors.white, // text color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   onPressed: _toggleShowPosts,
-                  child: Text(_showPosts ? 'Hide Posts' : 'Show Posts', style: const TextStyle(color: Colors.white)),
+                  child: Text(
+                    _showPosts ? 'Hide Posts' : 'Show Posts',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
                 _showPosts
                     ? Column(
