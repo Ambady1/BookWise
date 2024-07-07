@@ -65,9 +65,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.userDetails['username'],
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 1, 29, 46),
+                            userDetails['username'],
+                            style: TextStyle(
+                              color: AppColors.textColor,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -89,7 +89,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    ..._buildDescription(updatedUserDetails['description'] ?? ''),
+
+                    ..._buildDescription(
+                        updatedUserDetails['description'] ?? '')
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -127,12 +129,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16.0, vertical: 12.0),
-                        backgroundColor: FirebaseAuth.instance.currentUser!.uid ==
-                                widget.userDetails['uid']
-                            ? Colors.grey
-                            : (widget.isFollowing
-                                ? Colors.blueAccent
-                                : const Color.fromARGB(255, 13, 134, 204)),
+
+                        backgroundColor:
+                            FirebaseAuth.instance.currentUser!.uid ==
+                                    userDetails['uid']
+                                ? Colors.grey
+                                : (isFollowing
+                                    ? Colors.blueAccent
+                                    : const Color.fromARGB(255, 13, 134, 204)),
                         foregroundColor: Colors.white,
                         textStyle: const TextStyle(fontSize: 16.0),
                       ),
@@ -155,6 +159,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ],
                       ),
                     ),
+
                     if (FirebaseAuth.instance.currentUser!.uid !=
                         widget.userDetails['uid'])
                       ElevatedButton(
@@ -241,8 +246,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     return description.split('\n').map((line) {
       return Text(
         line,
-        style: const TextStyle(
-          color: Colors.black,
+        style: TextStyle(
+          color: AppColors.textColor,
           fontSize: 14,
         ),
       );

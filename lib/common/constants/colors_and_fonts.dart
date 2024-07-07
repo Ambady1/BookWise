@@ -37,6 +37,7 @@ class AppColors {
   static Color blackbg = Colors.black;
   static Color reactionBlue = Color.fromARGB(255, 107, 219, 227);
   static Color cardColor = Colors.white.withOpacity(0.4);
+  static Color iconColor = Colors.white30;
 }
 
 List<Color> boxColors = const [

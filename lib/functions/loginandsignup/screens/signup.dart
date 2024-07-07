@@ -58,12 +58,14 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.blackbg,
-      body: Center(
+      body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,34 +81,27 @@ class _SignUpState extends State<SignUp> {
                   height: 300,
                  )
                 ]
+
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               FormContainerWidget(
                 controller: _usernameController,
                 hintText: "Username",
                 isPasswordField: false,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
                 isPasswordField: false,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               FormContainerWidget(
                 controller: _passwordController,
                 hintText: "Password",
                 isPasswordField: true,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: selectedCity,
                 hint: const Text('Select City',style: TextStyle(color:Colors.white)),
@@ -122,9 +117,7 @@ class _SignUpState extends State<SignUp> {
                   );
                 }).toList(),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
                   _signUp();
@@ -148,9 +141,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -159,6 +150,7 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     width: 5,
                   ),
+
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
@@ -175,9 +167,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               GestureDetector(
                 child: Container(
                   width: double.infinity,
@@ -203,11 +193,13 @@ class _SignUpState extends State<SignUp> {
                           builder: (context) => const AdminSignUp()),
                       (route) => false);
                 },
-              )
+              ),
+              const SizedBox(height: 20), // Add some space at the bottom
             ],
           ),
         ),
       ),
+      resizeToAvoidBottomInset: true,
     );
   }
 
@@ -226,7 +218,8 @@ class _SignUpState extends State<SignUp> {
       isSigningUp = false;
     });
     if (user != null) {
-      await addUserDetails(username, email, user.uid, selectedCity); // Pass selectedCity here
+      await addUserDetails(
+          username, email, user.uid, selectedCity); // Pass selectedCity here
       showToast(message: "User is successfully created");
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MainScreen()));
@@ -236,7 +229,8 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-Future<void> addUserDetails(String username, String email, String uid, String? selectedCity) async {
+Future<void> addUserDetails(
+    String username, String email, String uid, String? selectedCity) async {
   try {
     String profilePicture = await getAvatarUrls();
 

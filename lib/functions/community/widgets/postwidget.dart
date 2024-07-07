@@ -58,7 +58,7 @@ class _PostWidgetState extends State<PostWidget> {
               child: SizedBox(
                 width: 35.w,
                 height: 35.h,
-                child: CachedImage(widget.defaultProfile),
+                child: CachedImage(widget.snapshot['profilePicture']),
               ),
             ),
             title: Text(
