@@ -30,12 +30,13 @@ TextTheme textTheme = TextTheme(
 );
 
 class AppColors {
-  static Color lightBlue = const Color(0xffCFEDEF);
+  static Color lightBlue = const Color(0xFF90CAF9);
   static Color black = Colors.black87;
   static Color white = const Color(0xffE9E8E6);
   static Color textColor = Colors.white;
-  static Color blackbg = const Color.fromARGB(255, 46, 42, 42);
-  static Color reactionBlue = Color.fromARGB(255, 169, 228, 232);
+  static Color blackbg = Colors.black;
+  static Color reactionBlue = Color.fromARGB(255, 107, 219, 227);
+  static Color cardColor = Colors.white.withOpacity(0.4);
 }
 
 List<Color> boxColors = const [

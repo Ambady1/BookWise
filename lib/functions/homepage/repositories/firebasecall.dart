@@ -5,8 +5,7 @@ Future<List<String>> updateNotifierWithBooks() async {
 
   // Fetch book data from Firestore
   QuerySnapshot querySnapshot =
-      await FirebaseFirestore.instance.collection('library1').get();
-
+      await FirebaseFirestore.instance.collection('library 1').get();
   if (querySnapshot.docs.isEmpty) {
     throw Error();
   }
