@@ -44,29 +44,21 @@ class _LoginPageState extends State<LoginPage> {
                 "Login",
                 style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
                 isPasswordField: false,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               FormContainerWidget(
                 controller: _passwordController,
                 hintText: "Password",
                 isPasswordField: true,
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               GestureDetector(
-                onTap: () {
-                  _signIn();
-                },
+                onTap: _signIn,
                 child: Container(
                   width: double.infinity,
                   height: 45,
@@ -76,9 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Center(
                     child: _isSigning
-                        ? const CircularProgressIndicator(
-                            color: Colors.white,
-                          )
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                             "Login",
                             style: TextStyle(
@@ -89,16 +79,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Don't have an account?"),
-                  const SizedBox(
-                    width: 5,
-                  ),
+                  const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
@@ -117,23 +103,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("Are you a librarian?"),
-                  const SizedBox(
-                    width: 5,
-                  ),
+                  const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminLoginPage()),
-                          (route) => false);
+                        context,
+                        MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                        (route) => false,
+                      );
                     },
                     child: const Text(
                       "Login",
@@ -157,14 +139,29 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    try {
+      User? user = await _auth.signInWithEmailAndPassword(email, password);
 
-    setState(() {
-      _isSigning = false;
-    });
+      setState(() {
+        _isSigning = false;
+      });
+
+      if (user != null) {
+        showToast(message: "User is successfully signed in");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        showToast(message: "Unknown error occurred, please try again");
+      }
+    } catch (e) {
+      setState(() {
+        _isSigning = false;
+      });
 
       showToast(message: "Error signing in: $e");
     }

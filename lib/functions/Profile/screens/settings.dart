@@ -10,10 +10,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -23,10 +21,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _usernameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
+    _nicknameController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -42,10 +38,8 @@ class _SettingsState extends State<Settings> {
       // Update the text controllers with the fetched data
       if (userSnapshot.exists) {
         setState(() {
-          _nameController.text = userSnapshot['username'] ?? '';
-          _usernameController.text = userSnapshot['nickname'] ?? '';
-          _emailController.text = userSnapshot['email'] ?? '';
-          // Password is not fetched for security reasons
+          _nicknameController.text = userSnapshot['nickname'] ?? '';
+          _descriptionController.text = userSnapshot['description'] ?? '';
         });
       }
     } catch (e) {
@@ -91,28 +85,6 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             ListTile(
               title: Text(
-                'Name',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  fillColor: Colors.white70,
-                  hintText:
-                      _nameController.text.isNotEmpty ? null : 'Enter your name',
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ListTile(
-              title: Text(
                 'Username',
                 style: TextStyle(
                   fontSize: 18,
@@ -120,10 +92,10 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               subtitle: TextField(
-                controller: _usernameController,
+                controller: _nicknameController,
                 decoration: InputDecoration(
                   fillColor: Colors.white70,
-                  hintText: _usernameController.text.isNotEmpty
+                  hintText: _nicknameController.text.isNotEmpty
                       ? null
                       : 'Enter your username',
                   filled: true,
@@ -136,46 +108,25 @@ class _SettingsState extends State<Settings> {
             SizedBox(height: 20),
             ListTile(
               title: Text(
-                'Email',
+                'Description',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               subtitle: TextField(
-                controller: _emailController,
+                controller: _descriptionController,
                 decoration: InputDecoration(
                   fillColor: Colors.white70,
-                  hintText: _emailController.text.isNotEmpty
+                  hintText: _descriptionController.text.isNotEmpty
                       ? null
-                      : 'Enter your email',
+                      : 'Enter a description',
                   filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ListTile(
-              title: Text(
-                'Password',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  fillColor: Colors.white70,
-                  hintText: '******', // Displaying placeholder for password
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                obscureText: true,
+                maxLines: null, // Allow multiple lines
               ),
             ),
           ],
@@ -184,17 +135,30 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _saveSettings() {
+  Future<void> _saveSettings() async {
     // Implement your save logic here
-    String name = _nameController.text.trim();
-    String username = _usernameController.text.trim();
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
+    String nickname = _nicknameController.text.trim();
+    String description = _descriptionController.text.trim();
 
     // Print the values for demonstration (replace with your logic)
-    print('Name: $name');
-    print('Username: $username');
-    print('Email: $email');
-    print('Password: $password');
+    print('Username: $nickname');
+    print('Description: $description');
+
+    // Save to Firestore
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'nickname': nickname,
+        'description': description,
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Settings saved successfully')),
+      );
+    } catch (e) {
+      print('Error saving settings: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving settings')),
+      );
+    }
   }
 }

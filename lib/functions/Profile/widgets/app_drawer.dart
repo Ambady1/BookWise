@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/Profile/functions/logout.dart';
 import 'package:bookwise/functions/Profile/screens/settings.dart';
-import 'package:bookwise/functions/Profile/functions/profilepicupload.dart';
+
 
 class AppDrawer extends StatelessWidget {
   final Map<String, dynamic> userDetails;
@@ -20,25 +20,10 @@ class AppDrawer extends StatelessWidget {
               color: Colors.blue,
             ),
             child: GestureDetector(
-              onTap: () => uploadProfileImage(context),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 CircleAvatar(
-  radius: 30,
-  backgroundImage: userDetails['photoURL'] != null
-      ? NetworkImage(userDetails['photoURL'])
-      : null,
-  child: userDetails['photoURL'] == null
-      ? Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey, // You can change this to any color you prefer
-          ),
-        )
-      : null,
-),
-
+  
                   const SizedBox(height: 10),
                   Text(
                     userDetails['username'] ?? 'Username',

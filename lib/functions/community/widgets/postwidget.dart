@@ -1,15 +1,12 @@
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/community/core/image_cached.dart';
 import 'package:bookwise/functions/community/core/utils.dart';
-import 'package:bookwise/functions/community/models/user_model.dart';
 import 'package:bookwise/functions/community/repositories/firestor.dart';
 import 'package:bookwise/functions/community/widgets/comment.dart';
 import 'package:bookwise/functions/community/widgets/like_animation.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
