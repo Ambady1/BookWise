@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/admin/adminhomepage.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
-import 'package:bookwise/widgets/form_container_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bookwise/functions/admin/adminlogin.dart';
+import 'package:bookwise/widgets/form_container_widget.dart';
 
 class AdminSignUp extends StatefulWidget {
   const AdminSignUp({Key? key});
@@ -18,9 +18,26 @@ class _AdminSignUpState extends State<AdminSignUp> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _citynameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? selectedCity; // Add selectedCity variable
+  List<String> cities = [
+    'Thiruvananthapuram',
+    'Kochi',
+    'Kozhikode',
+    'Kollam',
+    'Thrissur',
+    'Alappuzha',
+    'Palakkad',
+    'Kannur',
+    'Kottayam',
+    'Malappuram',
+    'Kasaragod',
+    'Pathanamthitta',
+    'Idukki',
+    'Ernakulam',
+    'Wayanad'
+  ];
 
   bool isSigningUp = false;
 
@@ -29,7 +46,6 @@ class _AdminSignUpState extends State<AdminSignUp> {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _citynameController.dispose();
     super.dispose();
   }
 
@@ -55,19 +71,30 @@ class _AdminSignUpState extends State<AdminSignUp> {
               ),
               FormContainerWidget(
                 controller: _usernameController,
-                hintText: "library name",
+                hintText: "Library name",
                 isPasswordField: false,
               ),
               const SizedBox(
                 height: 10,
               ),
-              FormContainerWidget(
-                controller: _citynameController,
-                hintText: "City name",
-                isPasswordField: false,
+              DropdownButtonFormField<String>(
+                value: selectedCity,
+                hint: Text('Select City'),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCity = newValue;
+                  });
+                },
+                items: cities.map<DropdownMenuItem<String>>((String city) {
+                  return DropdownMenuItem<String>(
+                    value: city,
+                    child: Text(city),
+                  );
+                }).toList(),
               ),
               const SizedBox(
-                height: 10,),
+                height: 10,
+              ),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
@@ -113,7 +140,7 @@ class _AdminSignUpState extends State<AdminSignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                 const  Text("Already registered?"),
+                  const Text("Already registered?"),
                   const SizedBox(
                     width: 5,
                   ),
@@ -121,7 +148,8 @@ class _AdminSignUpState extends State<AdminSignUp> {
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => AdminLoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => AdminLoginPage()),
                           (route) => false);
                     },
                     child: const Text(
@@ -135,7 +163,6 @@ class _AdminSignUpState extends State<AdminSignUp> {
               const SizedBox(
                 height: 20,
               ),
-             
             ],
           ),
         ),
@@ -149,7 +176,6 @@ class _AdminSignUpState extends State<AdminSignUp> {
     });
 
     String username = _usernameController.text;
-    String cityname = _citynameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -159,7 +185,7 @@ class _AdminSignUpState extends State<AdminSignUp> {
       isSigningUp = false;
     });
     if (user != null) {
-      await addUserDetails(username, email,cityname, user.uid);
+      await addUserDetails(username, email, selectedCity, user.uid); // Pass selectedCity here
       showToast(message: "Library is successfully registered");
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const AdminHomePage()));
@@ -169,7 +195,7 @@ class _AdminSignUpState extends State<AdminSignUp> {
   }
 }
 
-Future<void> addUserDetails(String username, String email,String cityname, String uid) async {
+Future<void> addUserDetails(String username, String email, String? cityname, String uid) async {
   try {
     await FirebaseFirestore.instance.collection('libraries').doc(uid).set({
       'username': username,
@@ -182,4 +208,3 @@ Future<void> addUserDetails(String username, String email,String cityname, Strin
     throw e; // Rethrow the error to handle it where addUserDetails is called
   }
 }
-

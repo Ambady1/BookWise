@@ -1,17 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bookwise/common/randomname.dart';
 import 'package:bookwise/common/assignAvatar.dart';
-import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/admin/adminsighnup.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 import 'package:bookwise/functions/mainscreen/mainscreen.dart';
+import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'package:bookwise/common/randomname.dart';
-
-
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -28,6 +25,24 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool isSigningUp = false;
+  String? selectedCity; // Declare selectedCity here
+  List<String> cities = [
+    'Thiruvananthapuram',
+    'Kochi',
+    'Kozhikode',
+    'Kollam',
+    'Thrissur',
+    'Alappuzha',
+    'Palakkad',
+    'Kannur',
+    'Kottayam',
+    'Malappuram',
+    'Kasaragod',
+    'Pathanamthitta',
+    'Idukki',
+    'Ernakulam',
+    'Wayanad'
+  ];
 
   @override
   void dispose() {
@@ -79,7 +94,25 @@ class _SignUpState extends State<SignUp> {
                 isPasswordField: true,
               ),
               const SizedBox(
-                height: 30,
+                height: 10,
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedCity,
+                hint: Text('Select City'),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCity = newValue;
+                  });
+                },
+                items: cities.map<DropdownMenuItem<String>>((String city) {
+                  return DropdownMenuItem<String>(
+                    value: city,
+                    child: Text(city),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               GestureDetector(
                 onTap: () {
@@ -181,7 +214,7 @@ class _SignUpState extends State<SignUp> {
       isSigningUp = false;
     });
     if (user != null) {
-      await addUserDetails(username, email, user.uid);
+      await addUserDetails(username, email, user.uid, selectedCity); // Pass selectedCity here
       showToast(message: "User is successfully created");
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MainScreen()));
@@ -191,24 +224,23 @@ class _SignUpState extends State<SignUp> {
   }
 }
 
-Future<void> addUserDetails(String username, String email, String uid) async {
+Future<void> addUserDetails(String username, String email, String uid, String? selectedCity) async {
   try {
-    
-   String profilePicture =await  getAvatarUrls();
+    String profilePicture = await getAvatarUrls();
 
-    String nickname =
-        generateUniqueReaderName(); // Call the imported function to generate nickname
+    String nickname = generateUniqueReaderName();
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'username': username,
       'email': email,
       'uid': uid,
-      'nickname': nickname, // Store the generated nickname
+      'nickname': nickname,
       'followers': [],
       'following': [],
-      'profilePicture':profilePicture,
+      'profilePicture': profilePicture,
+      'city': selectedCity, // Use selectedCity directly
     });
   } catch (e) {
     print('Error adding user details: $e');
-    throw e; // Rethrow the error to handle it where addUserDetails is called
+    throw e;
   }
 }

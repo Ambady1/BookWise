@@ -34,7 +34,7 @@ class _LibraryListPageState extends State<LibraryListPage> {
     }
   }
 
-  void _fetchBookingStatus() async {
+ void _fetchBookingStatus() async {
   if (currentUser == null) return;
 
   final userRef = FirebaseFirestore.instance.collection('users').doc(currentUser?.uid);
@@ -42,9 +42,10 @@ class _LibraryListPageState extends State<LibraryListPage> {
 
   if (userSnapshot.exists) {
     final bookings = List<Map<String, dynamic>>.from(userSnapshot.data()?['bookings'] ?? []);
+
     setState(() {
-      libraries = libraries.map((library) {
-        final isBooked = bookings.any((booking) => booking['libraryName'] == library['libraryName']);
+      libraries = widget.libraries.map((library) {
+        final isBooked = bookings.any((booking) => booking['libraryName'] == library['libraryName'] && booking['bookName'] == widget.bookName);
         return {
           ...library,
           'isBooked': isBooked,
@@ -53,6 +54,7 @@ class _LibraryListPageState extends State<LibraryListPage> {
     });
   }
 }
+
 
 
   void _bookLibrary(int index) async {
