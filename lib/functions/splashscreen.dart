@@ -22,6 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToNextScreen(BuildContext context, User? user) async {
+    // Add a delay of 2 seconds (2000 milliseconds) before navigating to the next screen
+    await Future.delayed(Duration(seconds: 2));
+
     if (user != null) {
       // Check if the user is in the 'libraries' collection using the user ID
       final DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -53,9 +56,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(
-        child: FlutterLogo(size: 200.0), // Your splash screen content
+        child: Image.asset(
+          'assets/final.png', // Update with the correct path to your logo
+          width: 150.0,
+        ), // Your splash screen content
       ),
     );
   }

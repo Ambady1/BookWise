@@ -1,3 +1,5 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -55,18 +57,31 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false, title: const Text("BookWise")),
+      backgroundColor: AppColors.blackbg,
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 20), // Add some space at the top
-              const Text(
-                "Sign Up",
-                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children:[
+                  Image.asset(
+                    "assets/final.png",
+                    width: 80,
+                    height: 80,
+                  ),
+                 Image.asset(
+                  "assets/textwhite.png",
+                  width: 300,
+                  height: 300,
+                 )
+                ]
+
               ),
               const SizedBox(height: 30),
               FormContainerWidget(
@@ -89,7 +104,7 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: selectedCity,
-                hint: Text('Select City'),
+                hint: const Text('Select City',style: TextStyle(color:Colors.white)),
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedCity = newValue;
@@ -130,8 +145,12 @@ class _SignUpState extends State<SignUp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already have an account?"),
-                  const SizedBox(width: 5),
+                  const Text("Already have an account?",
+                      style: TextStyle(color: Colors.white)),
+                  const SizedBox(
+                    width: 5,
+                  ),
+
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
