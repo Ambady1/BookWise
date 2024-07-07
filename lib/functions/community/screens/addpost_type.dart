@@ -63,7 +63,7 @@ class _AddPostTypeState extends State<AddPostType> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 46, 42, 42),
+      backgroundColor: AppColors.blackbg,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -108,7 +108,7 @@ class _AddPostTypeState extends State<AddPostType> {
                         TextField(
                           controller: titleController,
                           decoration: InputDecoration(
-                            fillColor: Colors.white.withOpacity(0.4),
+                            fillColor: AppColors.cardColor,
                             filled: true,
                             hintText: "Enter Title Here",
                             border: InputBorder.none,

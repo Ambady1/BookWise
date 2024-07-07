@@ -185,17 +185,19 @@ class _AdminSignUpState extends State<AdminSignUp> {
       isSigningUp = false;
     });
     if (user != null) {
-      await addUserDetails(username, email, selectedCity, user.uid); // Pass selectedCity here
+      await addUserDetails(
+          username, email, selectedCity, user.uid); // Pass selectedCity here
       showToast(message: "Library is successfully registered");
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const AdminHomePage()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const AdminHomePage()));
     } else {
       showToast(message: "Some error happened");
     }
   }
 }
 
-Future<void> addUserDetails(String username, String email, String? cityname, String uid) async {
+Future<void> addUserDetails(
+    String username, String email, String? cityname, String uid) async {
   try {
     await FirebaseFirestore.instance.collection('libraries').doc(uid).set({
       'username': username,
@@ -204,7 +206,7 @@ Future<void> addUserDetails(String username, String email, String? cityname, Str
       'uid': uid,
     });
   } catch (e) {
-    print('Error adding user details: $e');
+    // print('Error adding user details: $e');
     throw e; // Rethrow the error to handle it where addUserDetails is called
   }
 }

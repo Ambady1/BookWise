@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<bool> addToWishlist(String id, String title,String imageURL) async {
+Future<bool> addToWishlist(String id, String title, String imageURL) async {
   try {
     // Get the current user
     User? currentUser = FirebaseAuth.instance.currentUser;
@@ -13,17 +13,19 @@ Future<bool> addToWishlist(String id, String title,String imageURL) async {
     }
 
     // Reference to the user's document in the "users" collection
-    DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
 
     // Data to be added to the wishlist
     Map<String, String> wishlistItem = {
       'id': id,
       'title': title,
-      'imageUrl':imageURL,
+      'imageUrl': imageURL,
     };
 
     // Run a transaction to ensure atomic operations
-    bool success = await FirebaseFirestore.instance.runTransaction((transaction) async {
+    bool success =
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(userDoc);
 
       // Cast snapshot.data() to Map<String, dynamic>
@@ -36,7 +38,7 @@ Future<bool> addToWishlist(String id, String title,String imageURL) async {
       bool itemExists = wishlist.any((item) => item['id'] == id);
 
       if (itemExists) {
-        print("Book already in wishlist");
+        //print("Book already in wishlist");
         return true; // Return true indicating success
       } else {
         // Append the new item to the wishlist
@@ -44,14 +46,14 @@ Future<bool> addToWishlist(String id, String title,String imageURL) async {
 
         // Update the user document with the new wishlist
         transaction.update(userDoc, {'wishlist': wishlist});
-        print("Book added to wishlist");
+        // print("Book added to wishlist");
         return true; // Return true indicating success
       }
     });
 
     return success; // Return the transaction result
   } catch (e) {
-    print("Failed to add to wishlist: $e");
+    // print("Failed to add to wishlist: $e");
     return false; // Return false indicating failure
   }
 }
@@ -62,13 +64,14 @@ Stream<List<Map<String, dynamic>>> streamWishlist() async* {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
-      print("No user logged in");
+      // print("No user logged in");
       yield []; // Yield an empty list if no user is logged in
       return;
     }
 
     // Reference to the user's document in the "users" collection
-    DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+    DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
 
     // Listen to changes on the user document
     Stream<DocumentSnapshot> snapshotStream = userDoc.snapshots();
@@ -76,7 +79,7 @@ Stream<List<Map<String, dynamic>>> streamWishlist() async* {
     await for (DocumentSnapshot snapshot in snapshotStream) {
       // Check if the document exists and has a wishlist
       if (!snapshot.exists) {
-        print("No wishlist found");
+        // print("No wishlist found");
         yield []; // Yield an empty list if no wishlist is found
         continue;
       }
@@ -85,22 +88,21 @@ Stream<List<Map<String, dynamic>>> streamWishlist() async* {
       Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
 
       if (data == null || !data.containsKey('wishlist')) {
-        print("No wishlist found");
+        //print("No wishlist found");
         yield []; // Yield an empty list if no wishlist is found
         continue;
       }
 
       // Retrieve the wishlist from the document data
       List<dynamic> wishlistData = data['wishlist'];
-      List<Map<String, dynamic>> wishlist = List<Map<String, dynamic>>.from(wishlistData);
+      List<Map<String, dynamic>> wishlist =
+          List<Map<String, dynamic>>.from(wishlistData);
 
       yield wishlist; // Yield the current wishlist
-      print( wishlist);
+      //print( wishlist);
     }
   } catch (e) {
-    print("Failed to stream wishlist: $e");
+    // print("Failed to stream wishlist: $e");
     yield []; // Yield an empty list on error
   }
-
 }
-

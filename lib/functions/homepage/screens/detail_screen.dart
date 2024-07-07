@@ -4,6 +4,7 @@ import 'package:bookwise/functions/wishlist/repositories/firebasecall_wishlist.d
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
 import 'package:bookwise/functions/homepage/model/detailmodel.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
@@ -21,40 +22,40 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
- Future<bool> _checkAvailability(String bookName) async {
-  print("Checking availability for: $bookName");
+  Future<bool> _checkAvailability(String bookName) async {
+    print("Checking availability for: $bookName");
 
-  final querySnapshot = await FirebaseFirestore.instance
-      .collection('books')
-      .where('title', isEqualTo: bookName)
-      .limit(1)
-      .get();
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('books')
+        .where('title', isEqualTo: bookName)
+        .limit(1)
+        .get();
 
-  if (querySnapshot.docs.isNotEmpty) {
-    final bookData = querySnapshot.docs.first.data();
-    print("Book data found: $bookData");
+    if (querySnapshot.docs.isNotEmpty) {
+      final bookData = querySnapshot.docs.first.data();
+      print("Book data found: $bookData");
 
-    if (bookData.containsKey('libraries')) {
-      List<dynamic> libraries = bookData['libraries'];
-      for (var library in libraries) {
-        if (library.containsKey('copyCount')) {
-          print("Library: ${library['libraryName']}, Copy count: ${library['copyCount']}");
-          if (library['copyCount'] > 0) {
-            return true;
+      if (bookData.containsKey('libraries')) {
+        List<dynamic> libraries = bookData['libraries'];
+        for (var library in libraries) {
+          if (library.containsKey('copyCount')) {
+            print(
+                "Library: ${library['libraryName']}, Copy count: ${library['copyCount']}");
+            if (library['copyCount'] > 0) {
+              return true;
+            }
+          } else {
+            print("No 'copyCount' field in library: $library");
           }
-        } else {
-          print("No 'copyCount' field in library: $library");
         }
+      } else {
+        print("No 'libraries' field found in the document.");
       }
     } else {
-      print("No 'libraries' field found in the document.");
+      print("No book found with the title: $bookName");
     }
-  } else {
-    print("No book found with the title: $bookName");
+    return false;
   }
-  return false;
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -196,8 +197,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                               flex: 2,
                                             ),
                                             Container(
-                                              height: height * 35,
-                                              width: width * 100,
+                                              height: 35.h,
+                                              width: 120.w,
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                   color: Colors.white,

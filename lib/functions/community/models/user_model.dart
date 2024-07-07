@@ -41,7 +41,7 @@ class UserModel {
     return UserModel(
       email: map['email'] as String,
       username: map['username'] as String,
-      profilePic: map['profilePic'] as String?,
+      profilePic: map['profilePicture'] as String?,
       uid: map['uid'] as String,
       nickname: map['nickname'] as String,
       following: List<dynamic>.from(map['following'] as List<dynamic>? ?? []),

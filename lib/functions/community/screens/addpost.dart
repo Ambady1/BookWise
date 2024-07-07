@@ -15,11 +15,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     double cardHeight = 150;
     double cardWidth = double.infinity;
     double iconSize = 60;
-    Color iconColor = Colors.white30;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 46, 42, 42),
+      backgroundColor: AppColors.blackbg,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -73,7 +72,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               height: cardHeight,
                               width: cardWidth,
                               child: Card(
-                                color: Colors.white.withOpacity(0.4),
+                                color: AppColors.cardColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -82,7 +81,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   child: Icon(
                                     Icons.image_outlined,
                                     size: iconSize,
-                                    color: iconColor,
+                                    color: AppColors.iconColor,
                                   ),
                                 ),
                               ),
@@ -116,7 +115,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   child: Icon(
                                     Icons.font_download_outlined,
                                     size: iconSize,
-                                    color: iconColor,
+                                    color: AppColors.iconColor,
                                   ),
                                 ),
                               ),
@@ -150,7 +149,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   child: Icon(
                                     Icons.link_outlined,
                                     size: iconSize,
-                                    color: iconColor,
+                                    color: AppColors.iconColor,
                                   ),
                                 ),
                               ),

@@ -52,7 +52,6 @@ class _CommentWidgetState extends State<CommentWidget> {
 
                 var docData = snapshot.data!.data() as Map<String, dynamic>;
                 var comments = docData['comments'];
-
                 if (comments == null || comments.isEmpty) {
                   return Center(
                     child: Text(

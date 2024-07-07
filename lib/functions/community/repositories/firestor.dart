@@ -38,20 +38,26 @@ class FireServices {
     var uid = Uuid().v4();
     DateTime createdAt = DateTime.now();
     UserModel user = await getUser();
+    print(
+        "UserModel in createPost: ${user.profilePic}"); // Debug: Check the profilePic
+
+    // Handle null values and provide defaults where necessary
     await _firebaseFirestore.collection('posts').doc(uid).set({
-      'postType': postType,
+      'postType': postType ?? '',
       'postId': uid,
-      'title': title,
-      'postImageId': postImageId,
-      'postImage': postImage,
-      'description': description,
-      'link': link,
+      'title': title ?? '',
+      'postImageId': postImageId ?? '',
+      'postImage': postImage ?? '',
+      'description': description ?? '',
+      'link': link ?? '',
       'likes': [],
       'comments': [],
       'username': user.username,
       'userId': user.uid,
       'nickname': user.nickname,
-      'createdAt': createdAt
+      'createdAt': createdAt,
+      'profilePicture':
+          user.profilePic ?? '' // Provide a default empty string if null
     });
     return true;
   }
@@ -141,6 +147,7 @@ class FireServices {
       UserModel user = await getUser();
       String userId = user.uid;
       String username = user.username;
+      String? profilePic = user.profilePic;
       // Reference to the specific post document
       DocumentReference postRef =
           _firebaseFirestore.collection('posts').doc(postId);
@@ -151,6 +158,7 @@ class FireServices {
         'content': content,
         'postedBy': userId,
         'username': username,
+        'profilePicture': profilePic
       };
 
       // Update the post document by adding the new comment to the 'comments' array field
