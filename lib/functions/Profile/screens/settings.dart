@@ -140,10 +140,6 @@ class _SettingsState extends State<Settings> {
     String nickname = _nicknameController.text.trim();
     String description = _descriptionController.text.trim();
 
-    // Print the values for demonstration (replace with your logic)
-    print('Username: $nickname');
-    print('Description: $description');
-
     // Save to Firestore
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;

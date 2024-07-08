@@ -1,9 +1,10 @@
 import 'package:bookwise/functions/Profile/screens/chatpage.dart';
 import 'package:bookwise/common/constants/colors_and_fonts.dart'; // Ensure this import is correct
+import 'package:bookwise/functions/community/screens/searchscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bookwise/functions/community/widgets/postwidget.dart';
+import 'package:bookwise/functions/community/widgets/postwidget.dart'; // Add this import
 
 class ProfileWidget extends StatefulWidget {
   final Map<String, dynamic> userDetails;
@@ -56,7 +57,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   children: [
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(widget.userDetails['profilePicture']),
+                          NetworkImage(updatedUserDetails['profilePicture']),
                       radius: 40,
                     ),
                     Container(
@@ -65,7 +66,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.userDetails['username'],
+                            updatedUserDetails['username'],
                             style: TextStyle(
                               color: AppColors.textColor,
                               fontSize: 20,
@@ -73,7 +74,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             ),
                           ),
                           Text(
-                            '@${widget.userDetails['nickname']}',
+                            '@${updatedUserDetails['nickname']}',
                             style: TextStyle(
                               color: Colors.blueGrey[400],
                               fontSize: 15,
@@ -120,7 +121,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: widget.onFollowButtonPressed,
+                      onPressed: () {
+                        showSearch(
+                          context: context,
+                          delegate: SearchScreen(),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -129,7 +135,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             horizontal: 16.0, vertical: 12.0),
                         backgroundColor: FirebaseAuth.instance.currentUser!.uid ==
                                 widget.userDetails['uid']
-                            ? Colors.grey
+                            ? Colors.blueAccent
                             : (widget.isFollowing
                                 ? Colors.blueAccent
                                 : const Color.fromARGB(255, 13, 134, 204)),

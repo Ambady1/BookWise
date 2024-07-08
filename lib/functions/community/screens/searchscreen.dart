@@ -5,7 +5,7 @@ import 'package:bookwise/functions/community/repositories/firebasecall.dart';
 import 'package:bookwise/functions/Profile/screens/profile.dart';
 
 class SearchScreen extends SearchDelegate<String> {
-  FirebaseCall _firebaseCall = FirebaseCall();
+  final FirebaseCall _firebaseCall = FirebaseCall();
 
   @override
   List<Widget> buildActions(BuildContext context) {
