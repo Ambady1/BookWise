@@ -59,3 +59,36 @@ Future<List<String>> updateNotifierWithBooks() async {
   print("Total books found: ${zoneBooks.length}");
   return zoneBooks;
 }
+Future<bool> isBookInWishlist(String id) async {
+  try {
+    // Get the current user
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      print("No user logged in");
+      return false; // Return false if no user is logged in
+    }
+
+    // Reference to the user's document in the "users" collection
+    DocumentReference userDoc =
+        FirebaseFirestore.instance.collection('users').doc(currentUser.uid);
+
+    // Get the user document
+    DocumentSnapshot snapshot = await userDoc.get();
+
+    // Cast snapshot.data() to Map<String, dynamic>
+    Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+
+    // Retrieve the wishlist or initialize it if it doesn't exist
+    List<dynamic> wishlist = data?['wishlist'] ?? [];
+
+    // Check if the item exists in the wishlist
+    bool itemExists = wishlist.any((item) => item['id'] == id);
+
+    return itemExists; // Return true if the book exists, false otherwise
+  } catch (e) {
+    print("Failed to check wishlist: $e");
+    return false; // Return false indicating failure
+  }
+}
+

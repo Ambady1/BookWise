@@ -1,3 +1,4 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -162,8 +163,12 @@ class _LibraryListPageState extends State<LibraryListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.blackbg,
       appBar: AppBar(
-        title: Text('Available Libraries'),
+        backgroundColor: AppColors.lightBlue,
+        title: Text(
+            style: TextStyle(color: AppColors.textColor),
+            'Available Libraries'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -172,17 +177,22 @@ class _LibraryListPageState extends State<LibraryListPage> {
           itemBuilder: (context, index) {
             final library = libraries[index];
             return Card(
+              color: AppColors.cardColor,
               elevation: 4,
               margin: EdgeInsets.symmetric(vertical: 8),
               child: ListTile(
                 contentPadding: EdgeInsets.all(16),
                 title: Text(
                   library['libraryName'],
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: TextStyle(
+                    color: AppColors.textColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
                 subtitle: Text(
                   'Available copies: ${library['copyCount']}',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(color: AppColors.textColor ,fontSize: 16),
                 ),
                 trailing: library['isBooked']
                     ? ElevatedButton.icon(

@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<bool> addToWishlist(String id, String title, String imageURL) async {
+Future<String> addToWishlist(String id, String title, String imageURL) async {
   try {
     // Get the current user
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
       print("No user logged in");
-      return false; // Return false if no user is logged in
+      return "No user logged in"; // Return message if no user is logged in
     }
 
     // Reference to the user's document in the "users" collection
@@ -24,7 +24,7 @@ Future<bool> addToWishlist(String id, String title, String imageURL) async {
     };
 
     // Run a transaction to ensure atomic operations
-    bool success =
+    String result =
         await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot snapshot = await transaction.get(userDoc);
 
@@ -38,25 +38,32 @@ Future<bool> addToWishlist(String id, String title, String imageURL) async {
       bool itemExists = wishlist.any((item) => item['id'] == id);
 
       if (itemExists) {
-        //print("Book already in wishlist");
-        return true; // Return true indicating success
+        // Remove the item from the wishlist
+        wishlist.removeWhere((item) => item['id'] == id);
+
+        // Update the user document with the new wishlist
+        transaction.update(userDoc, {'wishlist': wishlist});
+        print("Book removed from wishlist");
+        return "removed"; // Return message indicating the book was removed
       } else {
         // Append the new item to the wishlist
         wishlist.add(wishlistItem);
 
         // Update the user document with the new wishlist
         transaction.update(userDoc, {'wishlist': wishlist});
-        // print("Book added to wishlist");
-        return true; // Return true indicating success
+        print("Book added to wishlist");
+        return "added"; // Return message indicating the book was added
       }
     });
 
-    return success; // Return the transaction result
+    return result; // Return the transaction result
   } catch (e) {
-    // print("Failed to add to wishlist: $e");
-    return false; // Return false indicating failure
+    print("Failed to add/remove to/from wishlist: $e");
+    return "Failed"; // Return message indicating failure
   }
 }
+
+
 
 Stream<List<Map<String, dynamic>>> streamWishlist() async* {
   try {
