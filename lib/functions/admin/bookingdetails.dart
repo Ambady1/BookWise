@@ -1,3 +1,4 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,7 @@ class Bookings extends StatefulWidget {
 Future<List<Map<String, dynamic>>> fetchBookingDetails() async {
   var currentUser = FirebaseAuth.instance.currentUser;
   if (currentUser == null) {
-    print('No user is currently signed in.');
+    // print('No user is currently signed in.');
     return [];
   }
   var uid = currentUser.uid;
@@ -21,12 +22,12 @@ Future<List<Map<String, dynamic>>> fetchBookingDetails() async {
   var libraryRef = FirebaseFirestore.instance.collection('libraries').doc(uid);
   var librarySnapshot = await libraryRef.get();
   if (!librarySnapshot.exists) {
-    print('No library document found for the current user.');
+    // print('No library document found for the current user.');
     return [];
   }
   var currentLibraryName = librarySnapshot.data()?['username'];
   if (currentLibraryName == null) {
-    print('Library name not found for the current user.');
+    // print('Library name not found for the current user.');
     return [];
   }
 
@@ -72,7 +73,7 @@ Future<void> handleReturn(String userId, Map<String, dynamic> booking) async {
     var userRef = FirebaseFirestore.instance.collection('users').doc(userId);
     var userSnapshot = await userRef.get();
     if (!userSnapshot.exists) {
-      print('User document does not exist.');
+      //print('User document does not exist.');
       return;
     }
     var bookings = (userSnapshot.data()?['bookings'] as List<dynamic>?) ?? [];
@@ -89,7 +90,7 @@ Future<void> handleReturn(String userId, Map<String, dynamic> booking) async {
     final querySnapshot = await bookQuery.get();
 
     if (querySnapshot.docs.isEmpty) {
-      print('No document found for book title: ${booking['bookName']}');
+      // print('No document found for book title: ${booking['bookName']}');
       return;
     }
 
@@ -99,7 +100,7 @@ Future<void> handleReturn(String userId, Map<String, dynamic> booking) async {
       final snapshot = await transaction.get(bookRef);
 
       if (!snapshot.exists) {
-        print('Document does not exist!');
+        // print('Document does not exist!');
         return;
       }
 
@@ -109,21 +110,21 @@ Future<void> handleReturn(String userId, Map<String, dynamic> booking) async {
           libraries.indexWhere((lib) => lib['libraryName'] == libraryName);
 
       if (libraryIndex == -1) {
-        print('Library not found in the list!');
+        // print('Library not found in the list!');
         return;
       }
 
-      print('Current copy count: ${libraries[libraryIndex]['copyCount']}');
+      // print('Current copy count: ${libraries[libraryIndex]['copyCount']}');
 
       libraries[libraryIndex]['copyCount'] =
           libraries[libraryIndex]['copyCount'] + 1;
 
-      print('New copy count: ${libraries[libraryIndex]['copyCount']}');
+      // print('New copy count: ${libraries[libraryIndex]['copyCount']}');
 
       transaction.update(bookRef, {'libraries': libraries});
-      print('Transaction update completed');
+      // print('Transaction update completed');
     }).catchError((error) {
-      print('Transaction failed: $error');
+      //print('Transaction failed: $error');
     });
 
     // Add the booking data along with the returned time to the library's bookingHistory
@@ -147,9 +148,9 @@ Future<void> handleReturn(String userId, Map<String, dynamic> booking) async {
       'bookingHistory': FieldValue.arrayUnion([bookingHistory])
     });
 
-    print('Return handled successfully.');
+    //print('Return handled successfully.');
   } catch (e) {
-    print('Error handling return: $e');
+    // print('Error handling return: $e');
   }
 }
 
@@ -165,6 +166,7 @@ class _BookingsState extends State<Bookings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.blackbg,
       body: Stack(
         children: [
           Column(
@@ -173,7 +175,7 @@ class _BookingsState extends State<Bookings> {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height / 5,
                 decoration: BoxDecoration(
-                  color: Colors.lightBlue,
+                  color: AppColors.lightBlue,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(45),
                     bottomRight: Radius.circular(45),
@@ -187,7 +189,7 @@ class _BookingsState extends State<Bookings> {
                       const Spacer(),
                       Text(
                         'Bookings',
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                       const Spacer(
                         flex: 5,
@@ -214,6 +216,7 @@ class _BookingsState extends State<Bookings> {
                         itemBuilder: (context, index) {
                           var booking = bookingDetails[index];
                           return Card(
+                            color: AppColors.cardColor,
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             elevation: 4,
                             shape: RoundedRectangleBorder(
@@ -232,7 +235,9 @@ class _BookingsState extends State<Bookings> {
                                         '${booking['userName']}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .titleMedium,
+                                            .titleMedium
+                                            ?.copyWith(
+                                                color: AppColors.textColor),
                                       ),
                                       subtitle: Column(
                                         crossAxisAlignment:
@@ -243,14 +248,18 @@ class _BookingsState extends State<Bookings> {
                                             'Booking Time: ${booking['bookingTime']}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium,
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                    color: AppColors.textColor),
                                           ),
                                           SizedBox(height: 4),
                                           Text(
                                             'Booking Status: ${booking['bookingStatus']}',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyMedium,
+                                                .bodyMedium
+                                                ?.copyWith(
+                                                    color: AppColors.textColor),
                                           ),
                                         ],
                                       ),
@@ -311,7 +320,7 @@ Future<void> updateBookingStatus(
   var userRef = FirebaseFirestore.instance.collection('users').doc(userId);
   var userSnapshot = await userRef.get();
   if (!userSnapshot.exists) {
-    print('User document does not exist.');
+    //print('User document does not exist.');
     return;
   }
   var bookings = (userSnapshot.data()?['bookings'] as List<dynamic>?) ?? [];

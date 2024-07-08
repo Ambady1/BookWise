@@ -1,3 +1,4 @@
+import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/functions/loginandsignup/firebase_auth_ser.dart';
 import 'package:bookwise/functions/mainscreen/mainscreen.dart';
@@ -30,21 +31,28 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text("Login"),
-      ),
-      body: Center(
+      backgroundColor: AppColors.blackbg,
+   body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "Login",
-                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  Image.asset(
+                    "assets/final.png",
+                    width: 80,
+                    height: 80,
+                  ),
+                 Image.asset(
+                  "assets/textwhite.png",
+                  width: 300,
+                  height: 300,
+                 )
+                ]
+              ),    
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
@@ -83,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  const Text("Don't have an account?", style: TextStyle(color: Colors.white),),
                   const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
@@ -107,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Are you a librarian?"),
+                  const Text("Are you a librarian?", style: TextStyle(color: Colors.white),),
                   const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
