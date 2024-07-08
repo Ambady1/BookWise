@@ -1,5 +1,6 @@
 import 'package:bookwise/common/constants/colors_and_fonts.dart';
 import 'package:bookwise/functions/booking/booking.dart';
+import 'package:bookwise/functions/homepage/repositories/firebasecall.dart';
 import 'package:bookwise/functions/wishlist/repositories/firebasecall_wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/homepage/notifiers/app_notifier.dart';
@@ -22,8 +23,23 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  bool isAdded = false;
+  @override
+  void initState() {
+    super.initState();
+    checkAdded();
+  }
+
+  void checkAdded() async {
+    bool added = await isBookInWishlist(
+        widget.id); // Corrected the call and variable name
+    setState(() {
+      isAdded = added;
+    });
+  }
+
   Future<bool> _checkAvailability(String bookName) async {
-    print("Checking availability for: $bookName");
+    // print("Checking availability for: $bookName");
 
     final querySnapshot = await FirebaseFirestore.instance
         .collection('books')
@@ -252,7 +268,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           ),
                                           OutlinedButton.icon(
                                             onPressed: () async {
-                                              final id = snapshot.data?.id;
+                                               final id = snapshot.data?.id;
                                               final title = snapshot
                                                   .data?.volumeInfo?.title;
                                               final imageURL = snapshot
@@ -262,13 +278,32 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                       ?.thumbnail ??
                                                   errorLink;
                                               if (id != null && title != null) {
-                                                bool success =
+                                                String success =
                                                     await addToWishlist(
                                                         id, title, imageURL);
-                                                if (success) {
+                                                if (success == "added") {
+                                                  setState(() {
+                                                    isAdded = true;
+                                                  });
                                                   Fluttertoast.showToast(
                                                     msg:
                                                         "Book added to wishlist",
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    backgroundColor:
+                                                        Colors.grey,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0,
+                                                  );
+                                                } else if (success ==
+                                                    "removed") {
+                                                  setState(() {
+                                                    isAdded = false;
+                                                  });
+                                                  Fluttertoast.showToast(
+                                                    msg: "Book removed",
                                                     toastLength:
                                                         Toast.LENGTH_LONG,
                                                     gravity:
@@ -296,11 +331,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                               }
                                             },
                                             style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(
-                                                    width: 1,
-                                                    color: Colors.white)),
-                                            icon: const Icon(
-                                              Icons.favorite_outline,
+                                              side: const BorderSide(
+                                                  width: 1,
+                                                  color: Colors.white),
+                                            ),
+                                            icon: Icon(
+                                              isAdded
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_outline,
                                               color: Colors.white,
                                             ),
                                             label: Text(
@@ -309,7 +347,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                                   .textTheme
                                                   .headlineMedium
                                                   ?.copyWith(
-                                                      color: Colors.white),
+                                                    color: Colors.white,
+                                                  ),
                                             ),
                                           )
                                         ],

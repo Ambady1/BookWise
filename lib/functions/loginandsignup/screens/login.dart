@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bookwise/functions/loginandsignup/screens/signup.dart';
 import 'package:bookwise/functions/admin/adminlogin.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,31 +29,32 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.blackbg,
-   body: Center(
-        child: Padding(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: AppColors.blackbg,
+    body: SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:[
+                children: [
                   Image.asset(
                     "assets/final.png",
                     width: 80,
                     height: 80,
                   ),
-                 Image.asset(
-                  "assets/textwhite.png",
-                  width: 300,
-                  height: 300,
-                 )
-                ]
-              ),    
+                  Image.asset(
+                    "assets/textwhite.png",
+                    width: 170.w,
+                    height: 300,
+                  ),
+                ],
+              ),
               FormContainerWidget(
                 controller: _emailController,
                 hintText: "Email",
@@ -91,7 +93,10 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?", style: TextStyle(color: Colors.white),),
+                  const Text(
+                    "Don't have an account?",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
@@ -115,7 +120,10 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Are you a librarian?", style: TextStyle(color: Colors.white),),
+                  const Text(
+                    "Are you a librarian?",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
@@ -139,8 +147,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   void _signIn() async {
     setState(() {
