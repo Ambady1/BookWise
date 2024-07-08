@@ -11,6 +11,7 @@ import 'package:bookwise/functions/loginandsignup/screens/login.dart';
 import 'package:bookwise/functions/mainscreen/mainscreen.dart';
 import 'package:bookwise/common/toast.dart';
 import 'package:bookwise/widgets/form_container_widget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -59,30 +60,26 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       backgroundColor: AppColors.blackbg,
       body: SingleChildScrollView(
-
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children:[
-                  Image.asset(
-                    "assets/final.png",
-                    width: 80,
-                    height: 80,
-                  ),
-                 Image.asset(
-                  "assets/textwhite.png",
-                  width: 300,
-                  height: 300,
-                 )
-                ]
-
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/final.png",
+                      width: 80,
+                      height: 80,
+                    ),
+                    Image.asset(
+                      "assets/textwhite.png",
+                      width: 170.w,
+                      height: 300,
+                    )
+                  ]),
               const SizedBox(height: 30),
               FormContainerWidget(
                 controller: _usernameController,
@@ -104,7 +101,8 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 value: selectedCity,
-                hint: const Text('Select City',style: TextStyle(color:Colors.white)),
+                hint: const Text('Select City',
+                    style: TextStyle(color: Colors.white)),
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedCity = newValue;
@@ -116,7 +114,34 @@ class _SignUpState extends State<SignUp> {
                     child: Text(city),
                   );
                 }).toList(),
+                selectedItemBuilder: (BuildContext context) {
+                  return cities.map<Widget>((String city) {
+                    return Text(
+                      city,
+                      style: TextStyle(color: Colors.white),
+                    );
+                  }).toList();
+                },
+                dropdownColor: Colors
+                    .black, // Optional: To set the dropdown menu background color
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                style: TextStyle(
+                    color: Colors
+                        .white), // To change the color of the dropdown items
               ),
+
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
@@ -150,7 +175,6 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(
                     width: 5,
                   ),
-
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
